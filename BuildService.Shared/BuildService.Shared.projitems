@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>0e4cc25f-6f8f-41be-9af5-d6846d53be72</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>BuildService.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildHistoryObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildSignature.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildStatusObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigManager.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\Bindable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneralHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SafeWriteableStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Server.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\BaseMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\BuildStatusMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketMessageEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketServerExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketServerWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WSBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocket\Root.cs" />
+  </ItemGroup>
+</Project>
