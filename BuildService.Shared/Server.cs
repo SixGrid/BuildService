@@ -31,6 +31,15 @@ namespace BuildService.Shared
             ThreadList.Add(threadBuildController);
         }
 
+        public Thread RegisterThread(ThreadStart tstart)
+        {
+            EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
+            Thread thread = new Thread(tstart);
+            WaitHandleList.Add(waitHandle);
+            ThreadList.Add(thread);
+            return thread;
+        }
+
         public void StartThreads()
         {
             foreach (Thread thread in ThreadList)
@@ -41,7 +50,7 @@ namespace BuildService.Shared
             WaitHandle.WaitAll(WaitHandleList.ToArray());
         }
 
-        public BuildController BuildController;
+        public BuildController? BuildController;
 
         public void Thread_BuildController(EventWaitHandle handle)
         {
