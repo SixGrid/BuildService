@@ -8,32 +8,15 @@ namespace BuildService.Shared.Build
     public struct BuildControllerOptions
     {
         public string BasePath { get; set; }
-        public string RepositoryBasePath
-        {
-            get
-            {
-                return Path.Combine(BasePath, @"repos");
-            }
-        }
-        public string BuildOutputBasePath
-        {
-            get
-            {
-                return Path.Combine(BasePath, @"builds");
-            }
-        }
+        public string RepositoryBasePath => Path.Combine(BasePath, @"repos");
+
+        public string BuildOutputBasePath => Path.Combine(BasePath, @"builds");
     }
     public class BuildController
     {
         public BuildControllerOptions Options { get; private set; }
         public Server Server;
-        public string BuildHistoryDirectory
-        {
-            get
-            {
-                return Path.Combine(Directory.GetCurrentDirectory(), @"buildhistory");
-            }
-        }
+        public string BuildHistoryDirectory => Path.Combine(Directory.GetCurrentDirectory(), @"buildhistory");
 
         public BuildController(Server server, BuildControllerOptions options)
         {
@@ -48,6 +31,7 @@ namespace BuildService.Shared.Build
             if (!Directory.Exists(BuildHistoryDirectory))
                 Directory.CreateDirectory(BuildHistoryDirectory);
             updateBuildHistory();
+            updateAvailableBuilds();
         }
 
         public List<BuildHistoryObject> BuildHistory = new List<BuildHistoryObject>();
@@ -106,17 +90,33 @@ namespace BuildService.Shared.Build
             BuildHistory = buildHistory;
         }
 
+        private void updateAvailableBuilds()
+        {
+            List<string> availableBuilds = new List<string>();
+
+            string[] repoDirectories = Directory.GetDirectories(Options.RepositoryBasePath);
+            foreach (string repo in repoDirectories)
+            {
+                FileAttributes attr = File.GetAttributes(repo);
+                if (attr.HasFlag(FileAttributes.Directory))
+                {
+                    foreach (string child in Directory.GetDirectories(repo))
+                    {
+                        string buildScriptLocation = Path.Combine(child,
+                            String.Format(@"build{0}", MainClass.BuildScriptExtension));
+                        if (File.Exists(buildScriptLocation))
+                            availableBuilds.Add(Path.GetFileName(repo) + @"/" + Path.GetFileName(child));
+                    }
+                }
+            }
+            
+            Console.WriteLine(availableBuilds.Count);
+        }
+        
         private BuildHistoryObject parseBuildHistoryFile(string filename)
         {
             BuildHistoryObject obj = new BuildHistoryObject(filename);
-            if (obj.Valid)
-            {
-                return obj;
-            }
-            else
-            {
-                return null;
-            }
+            return obj.Valid ? obj : null;
         }
     }
 }
