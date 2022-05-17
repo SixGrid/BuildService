@@ -32,6 +32,10 @@ namespace BuildService.Shared.Build
                 Directory.CreateDirectory(BuildHistoryDirectory);
             updateBuildHistory();
             updateAvailableBuilds();
+
+            var testinstance = GetBuildable(@"sixgrid/app");
+            var testbuild = new BuildInstance(this, testinstance);
+            testbuild.Start();
         }
 
         public List<BuildHistoryObject> BuildHistory = new List<BuildHistoryObject>();
@@ -116,10 +120,28 @@ namespace BuildService.Shared.Build
 
             AvailableBuilds = formattedAvailableBuilds;
         }
-        
-        private BuildHistoryObject parseBuildHistoryFile(string filename)
+
+        public BuildableItem? GetBuildable(string organization, string repository)
         {
-            BuildHistoryObject obj = new BuildHistoryObject(filename);
+            foreach (var item in AvailableBuilds)
+                if (item.Organization == organization && item.Repository == repository)
+                    return item;
+
+            return null;
+        }
+
+        public BuildableItem? GetBuildable(string relativeLocation)
+        {
+            foreach (var item in AvailableBuilds)
+                if (item.RelativeLocation == relativeLocation)
+                    return item;
+
+            return null;
+        }
+        
+        private BuildHistoryObject? parseBuildHistoryFile(string filename)
+        {
+            var obj = new BuildHistoryObject(filename);
             return obj.Valid ? obj : null;
         }
     }

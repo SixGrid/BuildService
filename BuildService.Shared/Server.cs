@@ -60,6 +60,7 @@ namespace BuildService.Shared
             {
                 BasePath = ConfigManager.sysRootDataLocation
             });
+
             handle.Set();
         }
 
