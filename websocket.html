@@ -5,14 +5,73 @@
     #output > p { overflow-wrap: break-word; }
     #output span { color: blue; }
     #output span.error { color: red; }
+    fieldset { width: fit-content; }
+    table {
+        width: 100vw;
+        position: absolute;
+        left: 0;
+    }
+    tr { width: 100vw; }
+    tr td {width: 50vw;max-width: 50vw;}
+
+    table, tr, td, th {
+        border: 1px solid #f0f0f0;
+        margin-top: 0;
+        vertical-align: top;
+    }
+    div.spitcontent {
+        height: 300px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    div.spitcontent dir {
+        flex-direction: column;
+    }
+
+    body {
+        background: #303030;
+        color: #f0f0f0;
+    }
+
+    #output pre {
+        background: #303030;
+        color: #f0f0f0;
+        padding: 4px;
+        margin: 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
 </style>
 <h2>WebSocket Test</h2>
 <textarea cols=60 rows=6></textarea>
 <button action="send">send</button>
 <button action="connect">connect</button>
-<button action="getAvailableBuilds">Get Available Builds</button>
-<div id=output></div>
-<script>
+<fieldset>
+	<legend>Builds</legend>
+	<button action="getAvailableBuilds">Get Available Builds</button><br>
+	
+	<select action="availableBuilds">
+
+	</select>
+	<button action="runSelectedBuild">Start Build</button>
+</fieldset>
+<table>
+    <tr>
+        <th>Raw Responses</th>
+        <th>Build Results</th>
+    </tr>
+    <tr>
+        <td>
+            <div id="output" class="spitcontent"></div>
+        </td>
+        <td>
+            <div action="buildResponse" class="spitcontent">
+
+            </div>
+        </td>
+    </tr>
+</table>
+<script type="text/javascript">
     // http://www.websocket.org/echo.html
 
     var button = document.querySelector("button[action=send]"),
@@ -22,7 +81,6 @@
         // wsUri = "ws://echo.websocket.org/",
         wsUri = "ws://127.0.0.1:8090",
         websocket = null;
-
     button.addEventListener("click", onClickButton);
     buttonConnect.addEventListener("click", onClickButtonConnect);
 
@@ -31,6 +89,9 @@
 		if (websocket == null || doSend == null) return;
 		
 		doSend(`BuildService.Shared.WebSocketProcessing.AvailableBuildsMessage\n{}`)
+	})
+	document.querySelector("button[action=runSelectedBuild]").addEventListener("click", () => {
+		doSend(`BuildService.Shared.WebSocketProcessing.ExecuteBuildMessage\n{"target": "${document.querySelector("[action=availableBuilds]").selectedOptions[0].value}"}`)
 	})
 
     function writeToScreen(message) {
@@ -41,7 +102,7 @@
     function onClickButtonConnect() {
         websocket = new WebSocket(wsUri);
         doSend = (message) => {
-            writeToScreen(`<h3>send</h3><pre><code>${message}</code></pre>`)
+            writeToScreen(`<div><pre><h3>send</h3><code>${message}</code></pre></div>`)
             let split = message.split('\n')
             console.log(message, JSON.parse(split[1]))
             split[1] = JSON.stringify(JSON.parse(split[1]), null, '\t')
@@ -51,16 +112,39 @@
             writeToScreen(`CONNECTED -> ${wsUri}`);
         };
 
-        websocket.onclose = function (e) {
+        websocket.onclose = function (e) {https://t.co/kPiO90lB7g
             writeToScreen("DISCONNECTED");
         };
 
         websocket.onmessage = async function (e, ...p) {
 			let text = await e.data.text()
             let split = text.split('\n')
-            console.log(text, JSON.parse(split[1]))
             split[1] = JSON.stringify(JSON.parse(split[1]), null, '\t')
-            writeToScreen(`<h3>response</h3><pre><code>${split.join('\n')}</code></pre>`);
+            writeToScreen(`<div><pre><h3>response</h3><code>${split.join('\n')}</code></pre></div>`);
+            
+            let data = JSON.parse(split[1])
+            
+            switch(split[0]) {
+				case 'BuildService.Shared.Build.BuildableItem[]':
+					let processedHTML = ``
+					for (let i = 0; i < data.length; i++) {
+						processedHTML += `<option value="${data[i].RelativeLocation}">${data[i].RelativeLocation}</option>`
+					}
+					console.log(processedHTML)
+					setTimeout(() => {
+						document.querySelector("[action=availableBuilds]").innerHTML = processedHTML
+					}, 100)
+					break;
+                case 'BuildService.Shared.Build.BuildInstanceMessageEventArgs':
+                    let parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+                    if (parentElement == null)
+                        document.querySelector(`[action=buildResponse]`).innerHTML += `<div buildID="${data.buildID}"></div>`
+                    parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+
+                    if (data.content.length > 0)
+                        parentElement.innerHTML += `<pre><code timestamp="${data.timestamp}" outputType="${data.outputType}">${data.content}</code></pre>\n`
+                    break;
+			}
         };
 
         websocket.onerror = function (e) {
