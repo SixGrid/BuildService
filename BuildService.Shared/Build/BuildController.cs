@@ -32,10 +32,6 @@ namespace BuildService.Shared.Build
                 Directory.CreateDirectory(BuildHistoryDirectory);
             updateBuildHistory();
             updateAvailableBuilds();
-
-            var testinstance = GetBuildable(@"sixgrid/sixgrid");
-            var testbuild = new BuildInstance(this, testinstance);
-            testbuild.Start();
         }
 
         public List<BuildHistoryObject> BuildHistory = new List<BuildHistoryObject>();
