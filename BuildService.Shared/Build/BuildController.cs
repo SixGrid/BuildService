@@ -33,7 +33,7 @@ namespace BuildService.Shared.Build
             updateBuildHistory();
             updateAvailableBuilds();
 
-            var testinstance = GetBuildable(@"sixgrid/app");
+            var testinstance = GetBuildable(@"sixgrid/sixgrid");
             var testbuild = new BuildInstance(this, testinstance);
             testbuild.Start();
         }
