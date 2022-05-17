@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketServerExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketServerWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WSBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocket\ReadOnly.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocket\Root.cs" />
   </ItemGroup>
 </Project>
