@@ -12,5 +12,5 @@ public enum StandardOutputType
 public class BuildInstanceMessageEventArgs : EventArgs
 {
     public StandardOutputType outputType { get; set; }
-    public string content { get; set; }
+    public string? content { get; set; }
 }
