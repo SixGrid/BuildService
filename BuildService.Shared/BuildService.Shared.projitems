@@ -14,6 +14,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildHistoryObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildInstanceMessageEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildInstanceStatus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildSignature.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildStatusObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigManager.cs" />
