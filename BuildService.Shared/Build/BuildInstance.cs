@@ -149,7 +149,7 @@ namespace BuildService.Shared.Build
             controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(startStatus));
 
             ScriptProcess.Start();
-
+            Console.WriteLine($@"[BuildInstance->Start] ID: {BuildID}, Timestamp: {StartTimestamp}");
             Status = BuildStatus.InProgress;
             updateBuildHistoryObject();
             
@@ -161,6 +161,7 @@ namespace BuildService.Shared.Build
             Status = BuildStatus.Done;
             EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             updateBuildHistoryObject();
+            Console.WriteLine($@"[BuildInstance->End  ] ID: {BuildID}, Timestamp: {EndTimestamp}");
             
             var endStatus = new BuildInstanceStatus(this, BuildStatus.Done);
             controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(endStatus));
