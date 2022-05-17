@@ -66,13 +66,15 @@ namespace BuildService.Shared
 
         public string WebSocketServerAddress = String.Format(@"ws://{0}:{1}", ConfigManager.svwsAddress, ConfigManager.svwsPort);
 
+        public WebSocketServerExtension WebSocketServer;
+        
         public void Thread_WebSocketServer(EventWaitHandle handle)
         {
-            var websocketServer = WSBuilder.CreateServer(WebSocketServerAddress);
+            WebSocketServer = WSBuilder.CreateServer(WebSocketServerAddress);
 
-            websocketServer.AddWebSocketService<WebSocket.Root>(@"/");
-            websocketServer.Realm = String.Format(@"BuildService.Shared");
-            websocketServer.Start();
+            WebSocketServer.AddWebSocketService<WebSocket.Root>(@"/");
+            WebSocketServer.Realm = String.Format(@"BuildService.Shared");
+            WebSocketServer.Start();
 
             Console.WriteLine(@"Websocket Server started at: " + WebSocketServerAddress);
 
