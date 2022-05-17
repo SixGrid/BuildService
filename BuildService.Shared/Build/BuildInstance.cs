@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using BuildService.Shared.Helpers;
+using BuildService.Shared.WebSocketService;
 
 namespace BuildService.Shared.Build
 {
@@ -15,8 +17,11 @@ namespace BuildService.Shared.Build
 
         public BuildableItem TargetItem;
         
+        public string BuildID { get; private set; }
+        
         public BuildInstance(BuildController _controller, BuildableItem buildableItem)
         {
+            BuildID = GeneralHelper.GenerateToken(16);
             controller = _controller;
             TargetItem = buildableItem;
             StartInformation = new ProcessStartInfo();
@@ -74,19 +79,7 @@ namespace BuildService.Shared.Build
             StartInformation.UseShellExecute = false;
             StartInformation.RedirectStandardOutput = true;
             StartInformation.RedirectStandardError = true;
-        }
-
-        public async void Start()
-        {
-            EventWaitHandle waithandleSubprocess = new EventWaitHandle(false, EventResetMode.ManualReset);
-            Thread threadSubprocess = new Thread(new ThreadStart(() => startThread(waithandleSubprocess)));
             
-            threadSubprocess.Start();
-            WaitHandle.WaitAll(new WaitHandle[] { waithandleSubprocess });
-        }
-
-        private void startThread(EventWaitHandle waitHandle)
-        {
             BuildMessageEvent += new EventHandler<BuildInstanceMessageEventArgs>(HandleBuildMessageEvent);
             ScriptProcess = new Process();
             ScriptProcess.StartInfo = StartInformation;
@@ -96,20 +89,36 @@ namespace BuildService.Shared.Build
                 var args = new BuildInstanceMessageEventArgs
                 {
                     outputType = StandardOutputType.Output,
-                    content = e.Data
+                    content = e.Data,
+                    buildID = BuildID
                 };
                 OnBuildMessageEvent(args);
+                
+                LogfileContent.Add($@"[OUT] [{args.timestamp}] {args.content}");
             });
             ScriptProcess.ErrorDataReceived += new DataReceivedEventHandler((s, e) =>
             {
                 var args = new BuildInstanceMessageEventArgs
                 {
                     outputType = StandardOutputType.Error,
-                    content = e.Data
+                    content = e.Data,
+                    buildID = BuildID
                 };
                 OnBuildMessageEvent(args);
+                
+                LogfileContent.Add($@"[ERR] [{args.timestamp}] {args.content}");
             });
+        }
 
+        public List<string> LogfileContent = new List<string>();
+
+        private void startThread(EventWaitHandle waitHandle)
+        {
+            LogfileContent.Clear();
+            
+            var startStatus = new BuildInstanceStatus(this, BuildStatus.InProgress);
+            controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(startStatus));
+            
             ScriptProcess.Start();
             
             ScriptProcess.BeginOutputReadLine();
@@ -117,6 +126,19 @@ namespace BuildService.Shared.Build
             
             ScriptProcess.WaitForExit();
             waitHandle.Set();
+            var endStatus = new BuildInstanceStatus(this, BuildStatus.Done);
+            controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(endStatus));
+            File.WriteAllText(LogfileLocation, String.Join("\n", LogfileContent.ToArray()));
+        }
+
+        public async void Start()
+        {
+            EventWaitHandle waithandleSubprocess = new EventWaitHandle(false, EventResetMode.ManualReset);
+            Thread threadSubprocess = new Thread(new ThreadStart(() => startThread(waithandleSubprocess)));
+
+            threadSubprocess.Start();
+            WaitHandle.WaitAll(new WaitHandle[] { waithandleSubprocess });
+            EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
 
         public EventHandler<BuildInstanceMessageEventArgs> BuildMessageEvent;
