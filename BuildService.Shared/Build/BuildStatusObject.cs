@@ -42,6 +42,5 @@ namespace BuildService.Shared.Build
         public string ID { get; set; }
         public BuildStatus Status { get; set; }
         public long Timestamp { get; set; }
-
     }
 }
