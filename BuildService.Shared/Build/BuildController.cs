@@ -35,6 +35,7 @@ namespace BuildService.Shared.Build
         }
 
         public List<BuildHistoryObject> BuildHistory = new List<BuildHistoryObject>();
+        public List<BuildableItem> AvailableBuilds = new List<BuildableItem>();
 
         public BuildHistoryObject GetByID(string id)
         {
@@ -92,7 +93,7 @@ namespace BuildService.Shared.Build
 
         private void updateAvailableBuilds()
         {
-            List<string> availableBuilds = new List<string>();
+            List<BuildableItem> formattedAvailableBuilds = new List<BuildableItem>();
 
             string[] repoDirectories = Directory.GetDirectories(Options.RepositoryBasePath);
             foreach (string repo in repoDirectories)
@@ -102,15 +103,18 @@ namespace BuildService.Shared.Build
                 {
                     foreach (string child in Directory.GetDirectories(repo))
                     {
-                        string buildScriptLocation = Path.Combine(child,
-                            String.Format(@"build{0}", MainClass.BuildScriptExtension));
+                        string buildScriptLocation = Path.Combine(child, $@"build{MainClass.BuildScriptExtension}");
                         if (File.Exists(buildScriptLocation))
-                            availableBuilds.Add(Path.GetFileName(repo) + @"/" + Path.GetFileName(child));
+                        {
+                            string relativeLocation = Path.GetFileName(repo) + @"/" + Path.GetFileName(child);
+                            BuildableItem item = new BuildableItem(this, relativeLocation);
+                            formattedAvailableBuilds.Add(item);
+                        }
                     }
                 }
             }
-            
-            Console.WriteLine(availableBuilds.Count);
+
+            AvailableBuilds = formattedAvailableBuilds;
         }
         
         private BuildHistoryObject parseBuildHistoryFile(string filename)
