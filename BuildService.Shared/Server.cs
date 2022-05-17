@@ -16,7 +16,8 @@ namespace BuildService.Shared
         public Dictionary<string, Type> WebSocketProcessingMatch = new Dictionary<string, Type>()
         {
             {@"BuildStatusMessage", typeof(WebSocketProcessing.BuildStatusMessage)},
-            {@"AvailableBuildsMessage", typeof(WebSocketProcessing.AvailableBuildsMessage)}
+            {@"AvailableBuildsMessage", typeof(WebSocketProcessing.AvailableBuildsMessage)},
+            {@"ExecuteBuildMessage", typeof(WebSocketProcessing.ExecuteBuildMessage)}
         };
 
         public void InitalizeServer()
