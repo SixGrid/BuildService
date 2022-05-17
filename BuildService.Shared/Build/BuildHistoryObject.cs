@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using BuildService.Shared.Helpers;
 
 namespace BuildService.Shared.Build
 {
@@ -15,10 +17,7 @@ namespace BuildService.Shared.Build
         public BuildHistoryObject(string filePath)
         {
             FilePath = filePath;
-
-            if (!File.Exists(filePath))
-                File.Create(filePath);
-
+            
             StatusHistory = new Dictionary<long, BuildStatusObject>();
 
             FileData.Add(@"statusHistory", @"0->Unknown");
@@ -29,9 +28,10 @@ namespace BuildService.Shared.Build
             FileData.Add(@"timestamp", @"0");
             FileData.Add(@"srcfolder", @"");
             FileData.Add(@"outfolder", @"");
-            Read();
+            if (File.Exists(filePath))
+                Read();
             FileData[@"id"] = Path.GetFileName(filePath).Replace(@".bhis", @"");
-            Write();
+            // Write();
 
             Valid = true;
         }
@@ -54,8 +54,15 @@ namespace BuildService.Shared.Build
             {
                 fileLines.Add(String.Format(@"{0}={1}", pair.Key, pair.Value));
             }
-
-            File.WriteAllLines(FilePath, fileLines);
+            
+            using (Stream stream = new SafeWriteStream(FilePath))
+            using (StreamWriter w = new StreamWriter(stream))
+            {
+                foreach (var line in fileLines)
+                {
+                    w.WriteLine(line);
+                }
+            }
         }
         public void Read()
         {
