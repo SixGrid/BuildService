@@ -10,26 +10,27 @@ namespace BuildService.Shared.WebSocketProcessing
     {
         public override void Process(Server server, WebSocketServerWrapper wrapper)
         {
-            List<BuildableItem> items = new List<BuildableItem>();
+            var items = new List<BuildableItem>();
 
-            foreach (BuildableItem child in server.BuildController.AvailableBuilds)
-            {
-                if (organization == @"*")
+            if (server.BuildController != null)
+                foreach (var child in server.BuildController.AvailableBuilds)
                 {
-                    items.Add(child);
-                }
-                else if (organization == child.Organization)
-                {
-                    if (repository == @"*")
+                    if (organization == @"*")
                     {
                         items.Add(child);
                     }
-                    else if (repository == child.Repository)
+                    else if (organization == child.Organization)
                     {
-                        items.Add(child);
+                        if (repository == @"*")
+                        {
+                            items.Add(child);
+                        }
+                        else if (repository == child.Repository)
+                        {
+                            items.Add(child);
+                        }
                     }
                 }
-            }
 
             wrapper.SendResponse(items.ToArray());
         }
