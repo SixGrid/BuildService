@@ -7,6 +7,10 @@
 		<Nullable>enable</Nullable>
 		<StartupObject>BuildService.Shared.MainClass</StartupObject>
 		<DefineConstants>WINDOWS</DefineConstants>
+		<AssemblyName>BuildService</AssemblyName>
+		<RootNamespace>BuildService</RootNamespace>
+		<Company>SixGrid Community Developers</Company>
+		<Product>Build Service</Product>
 	</PropertyGroup>
 
 	<ItemGroup>
