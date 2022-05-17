@@ -13,9 +13,10 @@ namespace BuildService.Shared
         List<Thread> ThreadList = new List<Thread>();
         List<WaitHandle> WaitHandleList = new List<WaitHandle>();
 
-        Dictionary<string, Type> WebSocketProcessingMatch = new Dictionary<string, Type>()
+        public Dictionary<string, Type> WebSocketProcessingMatch = new Dictionary<string, Type>()
         {
-            {@"BuildStatusMessage", typeof(WebSocketProcessing.BuildStatusMessage)}
+            {@"BuildStatusMessage", typeof(WebSocketProcessing.BuildStatusMessage)},
+            {@"AvailableBuildsMessage", typeof(WebSocketProcessing.AvailableBuildsMessage)}
         };
 
         public void InitalizeServer()
