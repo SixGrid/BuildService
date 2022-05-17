@@ -9,6 +9,7 @@
     <Import_RootNamespace>BuildService.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildableItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildHistoryObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildSignature.cs" />
@@ -19,6 +20,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\SafeWriteableStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\AvailableBuildsMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\BaseMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\BuildStatusMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketMessageEventArgs.cs" />
