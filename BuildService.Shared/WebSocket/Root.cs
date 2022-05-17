@@ -23,6 +23,7 @@ namespace BuildService.Shared.WebSocket
             if (!typeName.StartsWith(@"BuildService.Shared.WebSocketProcessing", StringComparison.Ordinal)) return;
             Dictionary<string, Type> dictTypeMap = new Dictionary<string, Type>();
             dictTypeMap.Add(@"BuildStatusMessage", typeof(BuildStatusMessage));
+            dictTypeMap.Add(@"AvailableBuildsMessage", typeof(AvailableBuildsMessage));
             foreach (KeyValuePair<string, Type> pair in dictTypeMap)
             {
                 if (typeName.StartsWith(@"BuildService.Shared.WebSocketProcessing." + pair.Key, StringComparison.Ordinal))
