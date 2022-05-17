@@ -81,7 +81,6 @@ namespace BuildService.Shared.Build
             StartInformation.RedirectStandardOutput = true;
             StartInformation.RedirectStandardError = true;
             
-            BuildMessageEvent += new EventHandler<BuildInstanceMessageEventArgs>(HandleBuildMessageEvent);
             ScriptProcess = new Process();
             ScriptProcess.StartInfo = StartInformation;
 
@@ -183,11 +182,6 @@ namespace BuildService.Shared.Build
         {
             var handler = BuildMessageEvent;
             handler?.Invoke(this, e);
-        }
-
-        public void HandleBuildMessageEvent(object? sender, BuildInstanceMessageEventArgs args)
-        {
-            Console.WriteLine($@"{args.content}");
         }
     }
 }

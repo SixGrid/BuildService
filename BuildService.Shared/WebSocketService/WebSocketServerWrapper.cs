@@ -30,9 +30,9 @@ namespace BuildService.Shared.WebSocketService
         {
             if (e.Type != Opcode.Text) return;
 
-            Console.WriteLine("================ Message Start ================");
-            Console.WriteLine(e.Data);
-            Console.WriteLine("===============================================");
+            // Console.WriteLine("================ Message Start ================");
+            // Console.WriteLine(e.Data);
+            // Console.WriteLine("===============================================");
 
             DateTime current = DateTime.Now;
 
@@ -91,10 +91,8 @@ namespace BuildService.Shared.WebSocketService
             int length = 0;
             for (int i = 0; i < result.Count; i++)
             {
-                Console.WriteLine(result[i]);
                 length += Encoding.UTF8.GetByteCount((string)result[i]);
             }
-            Console.WriteLine("============  Message Content End  ============");
 
             byte[] returnableByteArray = new byte[0];
             for (int i = 0; i < result.Count; i++)
