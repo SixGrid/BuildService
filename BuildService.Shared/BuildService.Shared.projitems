@@ -12,6 +12,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildableItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildController.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildHistoryObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildInstance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Build\BuildInstanceMessageEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildSignature.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildStatusObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigManager.cs" />
@@ -23,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\AvailableBuildsMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\BaseMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\BuildStatusMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)WebSocketProcessing\ExecuteBuildMessage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketMessageEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketServerExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocketService\WebSocketServerWrapper.cs" />
