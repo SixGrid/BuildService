@@ -111,7 +111,7 @@ namespace BuildService.Shared.Build
                 
                 LogfileContent.Add($@"[ERR] [{args.timestamp}] {args.content}");
                 
-                controller.Server.WebSocketServer.WebSocketServices[$@"build/{BuildID}"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(args));
+                controller.Server.WebSocketServer.WebSocketServices[$@"/build/{BuildID}"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(args));
             });
         }
 
