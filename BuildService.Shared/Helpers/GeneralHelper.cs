@@ -1,12 +1,24 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BuildService.Shared.Helpers
 {
     public static class GeneralHelper
     {
+        public static string GenerateToken(int length)
+        {
+            using (var cryptRng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenBuffer = new byte[length];
+                cryptRng.GetBytes(tokenBuffer);
+                var reg = new Regex("[^a-zA-Z0-9]");
+                return reg.Replace(Convert.ToBase64String(tokenBuffer), @"");
+            }
+        }
         public const int MAX_PATH_LENGTH = 248;
 
         public const string CLEANUP_DIRECTORY = @"_cleanup";
