@@ -82,6 +82,8 @@ namespace BuildService.Shared.Build
                 if (!regexMatch.Success)
                     continue;
                 BuildHistoryObject item = parseBuildHistoryFile(filename);
+                item.Read();
+                item.Write();
                 if (item != null)
                 {
                     buildHistory.Add(item);
