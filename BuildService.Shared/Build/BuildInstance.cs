@@ -88,40 +88,35 @@ namespace BuildService.Shared.Build
         private void startThread(EventWaitHandle waitHandle)
         {
             BuildMessageEvent += new EventHandler<BuildInstanceMessageEventArgs>(HandleBuildMessageEvent);
-            List<ThreadStart> threadStartList = new List<ThreadStart>(new ThreadStart[]
+            ScriptProcess = new Process();
+            ScriptProcess.StartInfo = StartInformation;
+
+            ScriptProcess.OutputDataReceived += new DataReceivedEventHandler((s, e) =>
             {
-                new ThreadStart(() => startThreadStdOut()),
-                new ThreadStart(() => startThreadStdErr())
+                var args = new BuildInstanceMessageEventArgs
+                {
+                    outputType = StandardOutputType.Output,
+                    content = e.Data
+                };
+                OnBuildMessageEvent(args);
             });
-            List<Thread> threadList = new List<Thread>();
-            foreach (var item in threadStartList)
-                threadList.Add(new Thread(item));
-            ScriptProcess = Process.Start(StartInformation);
-            foreach (var item in threadList)
-                item.Start();
+            ScriptProcess.ErrorDataReceived += new DataReceivedEventHandler((s, e) =>
+            {
+                var args = new BuildInstanceMessageEventArgs
+                {
+                    outputType = StandardOutputType.Error,
+                    content = e.Data
+                };
+                OnBuildMessageEvent(args);
+            });
+
+            ScriptProcess.Start();
+            
+            ScriptProcess.BeginOutputReadLine();
+            ScriptProcess.BeginErrorReadLine();
+            
             ScriptProcess.WaitForExit();
             waitHandle.Set();
-        }
-
-        private async void startThreadStdOut()
-        {
-            while (ScriptProcess.StandardOutput.Peek() >= 0)
-            {
-                var args = new BuildInstanceMessageEventArgs();
-                args.outputType = StandardOutputType.Output;
-                args.content = ScriptProcess.StandardOutput.Read(new char[1]).ToString() ?? string.Empty;
-                OnBuildMessageEvent(args);
-            }
-        }
-        private async void startThreadStdErr()
-        {
-            while (ScriptProcess.StandardError.Peek() >= 0)
-            {
-                var args = new BuildInstanceMessageEventArgs();
-                args.outputType = StandardOutputType.Error;
-                args.content = Encoding.Default.ToString(ScriptProcess.StandardError. ?? string.Empty;
-                OnBuildMessageEvent(args);
-            }
         }
 
         public EventHandler<BuildInstanceMessageEventArgs> BuildMessageEvent;
