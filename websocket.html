@@ -10,6 +10,7 @@
 <textarea cols=60 rows=6></textarea>
 <button action="send">send</button>
 <button action="connect">connect</button>
+<button action="getAvailableBuilds">Get Available Builds</button>
 <div id=output></div>
 <script>
     // http://www.websocket.org/echo.html
@@ -25,22 +26,29 @@
     button.addEventListener("click", onClickButton);
     buttonConnect.addEventListener("click", onClickButtonConnect);
 
+    var doSend = null
+	document.querySelector("button[action=getAvailableBuilds]").addEventListener("click", () => {
+		if (websocket == null || doSend == null) return;
+		
+		doSend(`BuildService.Shared.WebSocketProcessing.AvailableBuildsMessage\n{}`)
+	})
 
     function writeToScreen(message) {
         output.insertAdjacentHTML("afterbegin", "<p>" + message + "</p>");
     }
     writeToScreen(`DISCONNECTED`);
 
-    var doSend = null
     function onClickButtonConnect() {
         websocket = new WebSocket(wsUri);
         doSend = (message) => {
             writeToScreen(`<h3>send</h3><pre><code>${message}</code></pre>`)
-            websocket.send(message);
+            let split = message.split('\n')
+            console.log(message, JSON.parse(split[1]))
+            split[1] = JSON.stringify(JSON.parse(split[1]), null, '\t')
+            websocket.send(split.join('\n'));
         }
         websocket.onopen = function (e) {
             writeToScreen(`CONNECTED -> ${wsUri}`);
-            doSend(`KBuildSystem.App.WebSocketProcessing.BuildStatusMessage\n{"id":"stinky"}`)
         };
 
         websocket.onclose = function (e) {
@@ -48,8 +56,11 @@
         };
 
         websocket.onmessage = async function (e, ...p) {
-        let text = await e.data.text()
-            writeToScreen(`<h3>response</h3><pre><code>${text}</code></pre>`);
+			let text = await e.data.text()
+            let split = text.split('\n')
+            console.log(text, JSON.parse(split[1]))
+            split[1] = JSON.stringify(JSON.parse(split[1]), null, '\t')
+            writeToScreen(`<h3>response</h3><pre><code>${split.join('\n')}</code></pre>`);
         };
 
         websocket.onerror = function (e) {
