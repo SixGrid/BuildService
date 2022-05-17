@@ -12,37 +12,30 @@ namespace BuildService.Shared.WebSocket
     {
         protected override void OnWebSocketMessage(WebSocketMessageEventArgs e, Server server)
         {
+            if (server == null) throw new ArgumentNullException(nameof(server));
             Sessions.Sweep();
-            string[] lines = e.Data.Split(
+            var lines = e.Data.Split(
                 new string[] { "\r\n", "\r", "\n" },
                 StringSplitOptions.None);
 
-            string typeName = lines[0];
-            string rawJSONData = e.Data.Replace(lines[0], "");
-            Type jsonType = Type.GetType(typeName);
+            var typeName = lines[0];
+            var rawJsonData = e.Data.Replace(lines[0], "");
+            Type? jsonType = Type.GetType(typeName);
             if (!typeName.StartsWith(@"BuildService.Shared.WebSocketProcessing", StringComparison.Ordinal)) return;
-            Dictionary<string, Type> dictTypeMap = new Dictionary<string, Type>();
-            dictTypeMap.Add(@"BuildStatusMessage", typeof(BuildStatusMessage));
-            dictTypeMap.Add(@"AvailableBuildsMessage", typeof(AvailableBuildsMessage));
+            var dictTypeMap = server.WebSocketProcessingMatch;
             foreach (KeyValuePair<string, Type> pair in dictTypeMap)
             {
-                if (typeName.StartsWith(@"BuildService.Shared.WebSocketProcessing." + pair.Key, StringComparison.Ordinal))
-                {
-                    var mi = typeof(JsonConvert)
-                        .GetMethods()
-                        .Where(x => x.Name == @"DeserializeObject")
-                        .FirstOrDefault(x => x.IsGenericMethod);
-                    var objRef = mi.MakeGenericMethod(pair.Value);
-                    dynamic result = objRef.Invoke(typeof(JsonConvert), new object[] { rawJSONData });
-                    result.Process(server, this);
-                    break;
-                }
+                if (!typeName.StartsWith(@"BuildService.Shared.WebSocketProcessing." + pair.Key,
+                        StringComparison.Ordinal)) continue;
+                var mi = typeof(JsonConvert)
+                    .GetMethods()
+                    .Where(x => x.Name == @"DeserializeObject")
+                    .FirstOrDefault(x => x.IsGenericMethod);
+                var objRef = mi.MakeGenericMethod(pair.Value);
+                dynamic result = objRef.Invoke(typeof(JsonConvert), new object[] { rawJsonData }) ?? throw new InvalidOperationException();
+                result?.Process(server, this);
+                break;
             }
-        }
-
-        protected override void OnOpen()
-        {
-            base.OnOpen();
         }
     }
 }
