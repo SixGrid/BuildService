@@ -26,6 +26,7 @@ namespace BuildService.Shared.Build
             TargetItem = buildableItem;
             StartInformation = new ProcessStartInfo();
             initalizeStartInformation();
+            controller.Server.WebSocketServer.AddWebSocketService<WebSocket.ReadOnly>($@"/build/{BuildID}");
         }
 
         public ProcessStartInfo StartInformation { get; private set; }
@@ -95,6 +96,8 @@ namespace BuildService.Shared.Build
                 OnBuildMessageEvent(args);
                 
                 LogfileContent.Add($@"[OUT] [{args.timestamp}] {args.content}");
+                
+                controller.Server.WebSocketServer.WebSocketServices[$@"/build/{BuildID}"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(args));
             });
             ScriptProcess.ErrorDataReceived += new DataReceivedEventHandler((s, e) =>
             {
@@ -107,28 +110,63 @@ namespace BuildService.Shared.Build
                 OnBuildMessageEvent(args);
                 
                 LogfileContent.Add($@"[ERR] [{args.timestamp}] {args.content}");
+                
+                controller.Server.WebSocketServer.WebSocketServices[$@"build/{BuildID}"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(args));
             });
+        }
+
+        private void updateBuildHistoryObject()
+        {
+            if (HistoryObject == null)
+                HistoryObject = new BuildHistoryObject(Path.Combine(controller.Options.BuildOutputBasePath,
+                TargetItem.Organization, TargetItem.Repository, $@"{BuildID}.bhis"));
+            HistoryObject.ID = BuildID;
+            HistoryObject.Repository = TargetItem.Repository;
+            HistoryObject.Organization = TargetItem.Organization;
+            HistoryObject.Timestamp = StartTimestamp;
+            HistoryObject.SourceFolder = Path.Combine(controller.Options.RepositoryBasePath, TargetItem.Organization,
+                TargetItem.Repository);
+            HistoryObject.OutputFolder = BuildLocation;
+
+            var statusObject = new BuildStatusObject(HistoryObject);
+            statusObject.ID = BuildID;
+            statusObject.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            statusObject.Status = Status;
+            HistoryObject.StatusHistory.Add(statusObject.Timestamp, statusObject);
+            
+            HistoryObject.Write();
         }
 
         public List<string> LogfileContent = new List<string>();
 
+        public BuildStatus Status = BuildStatus.Unknown;
+        public BuildHistoryObject HistoryObject;
+        
         private void startThread(EventWaitHandle waitHandle)
         {
             LogfileContent.Clear();
             
             var startStatus = new BuildInstanceStatus(this, BuildStatus.InProgress);
             controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(startStatus));
-            
+
             ScriptProcess.Start();
+
+            Status = BuildStatus.InProgress;
+            updateBuildHistoryObject();
             
             ScriptProcess.BeginOutputReadLine();
             ScriptProcess.BeginErrorReadLine();
             
             ScriptProcess.WaitForExit();
-            waitHandle.Set();
+
+            Status = BuildStatus.Done;
+            EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            updateBuildHistoryObject();
+            
             var endStatus = new BuildInstanceStatus(this, BuildStatus.Done);
             controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(endStatus));
             File.WriteAllText(LogfileLocation, String.Join("\n", LogfileContent.ToArray()));
+            waitHandle.Set();
         }
 
         public async void Start()
@@ -138,7 +176,6 @@ namespace BuildService.Shared.Build
 
             threadSubprocess.Start();
             WaitHandle.WaitAll(new WaitHandle[] { waithandleSubprocess });
-            EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         }
 
         public EventHandler<BuildInstanceMessageEventArgs> BuildMessageEvent;
