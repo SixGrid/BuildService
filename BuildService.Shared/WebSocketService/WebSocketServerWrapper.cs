@@ -63,12 +63,12 @@ namespace BuildService.Shared.WebSocketService
         }
         public void SendResponse(dynamic content)
         {
-            byte[] data = GenerateResponse(content);
+            byte[] data = WebSocketServerWrapper.GenerateResponse(content);
             Send(data);
         }
         public async Task<bool> SendAsyncResponse(dynamic content)
         {
-            byte[] data = GenerateResponse(content);
+            byte[] data = WebSocketServerWrapper.GenerateResponse(content);
             var promise = new TaskCompletionSource<bool>();
             bool res = false;
             Action<bool> whenSendIsDone = (bool stat) => {
@@ -79,7 +79,7 @@ namespace BuildService.Shared.WebSocketService
             await Task.WhenAny(promise.Task);
             return res;
         }
-        protected byte[] GenerateResponse(dynamic content)
+        public static byte[] GenerateResponse(dynamic content)
         {
             List<string> result = new List<string>();
 
