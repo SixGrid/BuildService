@@ -19,14 +19,18 @@ public static class Instance
     public static void WebServerThread(EventWaitHandle handle)
     {   
         var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = "websocket.html";
+        var resourceName = "BuildService.websocket.html";
 
+        var names = assembly.GetManifestResourceNames();
+        
         using (var stream = assembly.GetManifestResourceStream(resourceName))
-            if (stream != null)
-                using (var reader = new StreamReader(stream))
-                {
-                    WebDataWithTemplatedStrings = reader.ReadToEnd();
-                }
+        {
+            using (var reader = new StreamReader(stream))
+            {
+                var content = reader.ReadToEnd();
+                WebDataWithTemplatedStrings = content;
+            }
+        }
         
         // Create a Http server and start listening for incoming connections
         listener = new HttpListener();
@@ -63,7 +67,7 @@ public static class Instance
 
                 // Write the response info
                 string disableSubmit = !runServer ? "disabled" : "";
-                byte[] data = Encoding.UTF8.GetBytes(String.Format(WebData.Replace(@"$HTTP_HOST", req.UserHostName.Split(@":")[0])));
+                byte[] data = Encoding.UTF8.GetBytes(WebData.Replace(@"$HTTP_HOST", req.UserHostName.Split(@":")[0]));
                 resp.ContentType = "text/html";
                 resp.ContentEncoding = Encoding.UTF8;
                 resp.ContentLength64 = data.LongLength;
