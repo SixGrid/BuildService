@@ -44,10 +44,11 @@ jobs:
     permissions: write-all
     strategy:
       matrix:
-        - os: ubuntu-latest
-          dotnet: "6.0.x"
-          artifact_name: BuildService.linux-amd64.zip
-          asset_name: bundle.zip
+        include:
+          - os: ubuntu-latest
+            dotnet: "6.0.x"
+            artifact_name: BuildService.linux-amd64.zip
+            asset_name: bundle.zip
     name: Build and Publish
     steps:
       - uses: actions/checkout@v3
