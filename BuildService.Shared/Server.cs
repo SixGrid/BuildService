@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Principal;
 using System.Threading;
 using BuildService.Shared.Build;
 using BuildService.Shared.Configuration;
 using BuildService.Shared.WebSocketService;
+using WebSocketSharp.Net;
 
 namespace BuildService.Shared
 {
@@ -78,7 +80,11 @@ namespace BuildService.Shared
             WebSocketServer = WSBuilder.CreateServer(WebSocketServerAddress);
 
             WebSocketServer.AddWebSocketService<WebSocket.Root>(@"/");
-            WebSocketServer.Realm = String.Format(@"BuildService.Shared");
+            WebSocketServer.Realm = String.Format(@"BuildService");
+
+            WebSocketServer.AuthenticationSchemes = WebSocketSharp.Net.AuthenticationSchemes.Basic;
+            WebSocketServer.UserCredentialsFinder = WebSocketServerCredentialHandle;
+            
             WebSocketServer.Start();
 
             Console.WriteLine(@"Websocket Server started at: " + WebSocketServerAddress);
@@ -86,9 +92,12 @@ namespace BuildService.Shared
             handle.Set();
         }
 
-        public void GetBuildStatus(string buildID)
+        private static NetworkCredential? WebSocketServerCredentialHandle(IIdentity user)
         {
-            Console.WriteLine(String.Format(@"[Server->GetBuildStatus] BuildID: {0}", buildID));
+            var auth = (HttpBasicIdentity)user;
+            if (user.Name != ConfigManager.authUsername)
+                return null;
+            return auth.Password != ConfigManager.authPassword ? null : new NetworkCredential(user.Name, auth.Password);
         }
     }
 }

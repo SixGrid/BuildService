@@ -35,6 +35,7 @@ public static class Instance
         // Create a Http server and start listening for incoming connections
         listener = new HttpListener();
         listener.Prefixes.Add(url);
+        listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
         listener.Start();
         Console.WriteLine("Listening for connections on {0}", url);
 
@@ -65,9 +66,28 @@ public static class Instance
                 // Print out some info about the request
                 if (req.Url != null) Console.WriteLine(req.Url.ToString());
 
+                bool isAuthenticated = false;
+                
+                HttpListenerBasicIdentity? identity = (HttpListenerBasicIdentity)ctx.User!.Identity!;
+                if (identity == null)
+                    isAuthenticated = false;
+                else
+                    isAuthenticated = identity.Name == ConfigManager.authUsername &&
+                                      identity.Password == ConfigManager.authPassword;
+
                 // Write the response info
                 string disableSubmit = !runServer ? "disabled" : "";
-                byte[] data = Encoding.UTF8.GetBytes(WebData.Replace(@"$HTTP_HOST", req.UserHostName.Split(@":")[0]));
+                byte[] data = new byte[] { };
+                if (isAuthenticated)
+                {
+                    data = Encoding.UTF8.GetBytes(WebData.Replace(@"$HTTP_HOST", req.UserHostName.Split(@":")[0]));
+                    resp.StatusCode = 200;
+                }
+                else
+                {
+                    data = Encoding.UTF8.GetBytes(@"<h1>Error 403, Unauthorized");
+                    resp.StatusCode = 401;
+                }
                 resp.ContentType = "text/html";
                 resp.ContentEncoding = Encoding.UTF8;
                 resp.ContentLength64 = data.LongLength;
