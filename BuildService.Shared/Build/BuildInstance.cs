@@ -31,11 +31,19 @@ namespace BuildService.Shared.Build
 
         public ProcessStartInfo StartInformation { get; private set; }
         public Process ScriptProcess { get; private set; }
+
+        public void appendEnvoromentVariables(Dictionary<string, string> dict)
+        {
+            foreach (var pair in dict)
+            {
+                StartInformation.Environment.Add(pair.Key, pair.Value);
+            }
+        }
         
         public string LogfileLocation { get; private set; }
 
         public string BuildLocation { get; private set; }
-        
+
         private void initalizeStartInformation()
         {
             StartInformation.Environment.Add(@"basedir", controller.Options.BasePath);
@@ -144,6 +152,8 @@ namespace BuildService.Shared.Build
         private void startThread(EventWaitHandle waitHandle)
         {
             LogfileContent.Clear();
+
+            TargetItem.LatestBuildID = BuildID;
             
             var startStatus = new BuildInstanceStatus(this, BuildStatus.InProgress);
             controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(startStatus));
@@ -151,6 +161,7 @@ namespace BuildService.Shared.Build
             ScriptProcess.Start();
             Console.WriteLine($@"[BuildInstance->Start] ID: {BuildID}, Timestamp: {StartTimestamp}");
             Status = BuildStatus.InProgress;
+            TargetItem.CurrentBuildStatus = Status;
             updateBuildHistoryObject();
             
             ScriptProcess.BeginOutputReadLine();
