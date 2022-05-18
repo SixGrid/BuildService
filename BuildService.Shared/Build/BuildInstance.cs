@@ -178,6 +178,21 @@ namespace BuildService.Shared.Build
             var endStatus = new BuildInstanceStatus(this, BuildStatus.Done);
             controller.Server.WebSocketServer.WebSocketServices[@"/"].Sessions.Broadcast(WebSocketServerWrapper.GenerateResponse(endStatus));
             File.WriteAllText(LogfileLocation, String.Join("\n", LogfileContent.ToArray()));
+
+            var latestBuildPath = Path.Combine(controller.Options.BuildOutputBasePath, TargetItem.Organization,
+                TargetItem.Repository, @"latest");
+            var latestBuildHistoryPath = Path.Combine(controller.Options.BuildOutputBasePath, TargetItem.Organization,
+                TargetItem.Repository, @"latest.bhis");
+            
+            if (Directory.Exists(latestBuildPath))
+                Directory.Delete(latestBuildPath);
+            Directory.CreateSymbolicLink(latestBuildPath,
+                BuildLocation);
+            
+            if (File.Exists(latestBuildHistoryPath))
+                File.Delete(latestBuildHistoryPath);
+            File.CreateSymbolicLink(latestBuildHistoryPath, HistoryObject.FilePath);
+            
             waitHandle.Set();
         }
 
