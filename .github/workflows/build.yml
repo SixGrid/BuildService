@@ -47,8 +47,8 @@ jobs:
         include:
           - os: ubuntu-latest
             dotnet: "6.0.x"
-            artifact_name: BuildService.linux-amd64.zip
-            asset_name: bundle.zip
+            artifact_name: bundle.zip
+            asset_name: BuildService.linux-amd64.zip
     name: Build and Publish
     steps:
       - uses: actions/checkout@v3
