@@ -10,8 +10,31 @@
 		<AssemblyName>BuildService</AssemblyName>
 		<RootNamespace>BuildService</RootNamespace>
 		<Company>SixGrid Community Developers</Company>
-		<Product>Build Service</Product>
+		<Product>SixGrid Build Service</Product>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
 	</PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Properties\VersionAutoIncrement.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>VersionAutoIncrement.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\VersionAutoIncrement.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>VersionAutoIncrement.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+    <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TransformOnBuild>true</TransformOnBuild>
+    <OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
+    <TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+    
+    </PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
@@ -24,5 +47,9 @@
 	</ItemGroup>
 
 	<Import Project="..\BuildService.Shared\BuildService.Shared.projitems" Label="Shared" />
+
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="mono /usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe -o $(ProjectDir)Properties/VersionAutoIncrement.cs $(ProjectDir)Properties/VersionAutoIncrement.tt" />
+	</Target>
 
 </Project>
