@@ -48,7 +48,7 @@
 
 	<Import Project="..\BuildService.Shared\BuildService.Shared.projitems" Label="Shared" />
 
-	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<Exec Command="mono /usr/lib/monodevelop/AddIns/MonoDevelop.TextTemplating/TextTransform.exe -o $(ProjectDir)Properties/VersionAutoIncrement.cs $(ProjectDir)Properties/VersionAutoIncrement.tt" />
 	</Target>
 
