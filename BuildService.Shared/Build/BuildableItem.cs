@@ -24,5 +24,15 @@ namespace BuildService.Shared.Build
         public string Branch = @"default";
 
         public string ToJson() => JsonConvert.SerializeObject(this);
+
+        public BuildStatus CurrentBuildStatus = BuildStatus.ReadyToBuild;
+        public string LatestBuildID = string.Empty;
+        public BuildInstance? CreateBuild()
+        {
+            if (CurrentBuildStatus == BuildStatus.InProgress) return null;
+            var buildable = controller.GetBuildable(RelativeLocation);
+            if (buildable == null) return null;
+            return controller.Server.BuildController != null ? new BuildInstance(controller.Server.BuildController, buildable) : null;
+        }
     }
 }
