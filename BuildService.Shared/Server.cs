@@ -82,8 +82,8 @@ namespace BuildService.Shared
             WebSocketServer.AddWebSocketService<WebSocket.Root>(@"/");
             WebSocketServer.Realm = String.Format(@"BuildService");
 
-            WebSocketServer.AuthenticationSchemes = WebSocketSharp.Net.AuthenticationSchemes.Basic;
             WebSocketServer.UserCredentialsFinder = WebSocketServerCredentialHandle;
+            WebSocketServer.AuthenticationSchemes = AuthenticationSchemes.Basic;
             
             WebSocketServer.Start();
 
@@ -92,12 +92,14 @@ namespace BuildService.Shared
             handle.Set();
         }
 
-        private static NetworkCredential? WebSocketServerCredentialHandle(IIdentity user)
+        private static NetworkCredential WebSocketServerCredentialHandle(IIdentity user)
         {
             var auth = (HttpBasicIdentity)user;
-            if (user.Name != ConfigManager.authUsername)
+            if (auth.Name != ConfigManager.authUsername)
                 return null;
-            return auth.Password != ConfigManager.authPassword ? null : new NetworkCredential(user.Name, auth.Password);
+            if (auth.Password != ConfigManager.authPassword)
+                return null;
+            return new NetworkCredential(auth.Name, auth.Password);
         }
     }
 }
