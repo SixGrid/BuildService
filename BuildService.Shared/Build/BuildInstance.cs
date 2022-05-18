@@ -12,7 +12,7 @@ namespace BuildService.Shared.Build
     {
         private BuildController controller;
 
-        public long StartTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        public long StartTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         public long EndTimestamp;
 
         public BuildableItem TargetItem;
@@ -129,7 +129,7 @@ namespace BuildService.Shared.Build
 
             var statusObject = new BuildStatusObject(HistoryObject);
             statusObject.ID = BuildID;
-            statusObject.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            statusObject.Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             statusObject.Status = Status;
             HistoryObject.StatusHistory.Add(statusObject.Timestamp, statusObject);
             
@@ -159,7 +159,8 @@ namespace BuildService.Shared.Build
             ScriptProcess.WaitForExit();
 
             Status = BuildStatus.Done;
-            EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            TargetItem.CurrentBuildStatus = Status;
+            EndTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             updateBuildHistoryObject();
             Console.WriteLine($@"[BuildInstance->End  ] ID: {BuildID}, Timestamp: {EndTimestamp}");
             

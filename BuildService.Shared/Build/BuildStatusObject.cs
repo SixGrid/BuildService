@@ -27,7 +27,7 @@ namespace BuildService.Shared.Build
         {
             SetParent(_parent);
             Status = BuildStatus.Unknown;
-            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
         private BuildHistoryObject parent;
         public BuildHistoryObject GetParent()
