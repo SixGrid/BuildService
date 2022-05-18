@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using BuildService.Shared.Build;
 using BuildService.Shared.WebSocketService;
+using WebSocketSharp;
 
 namespace BuildService.Shared.WebSocketProcessing
 {
@@ -16,11 +17,14 @@ namespace BuildService.Shared.WebSocketProcessing
             var instance = new BuildInstance(server.BuildController, buildable);
             instance.BuildMessageEvent += (sender, args) =>
             {
-                wrapper.SendResponse(args);
+                if (wrapper.State == WebSocketState.Open)
+                    wrapper.SendResponse(args);
             };
+            instance.appendEnvoromentVariables(additionalEnviromentVariables);
             instance.Start();
         }
 
         public string target { get; set; }
+        public Dictionary<string, string> additionalEnviromentVariables = new Dictionary<string, string>();
     }
 }
