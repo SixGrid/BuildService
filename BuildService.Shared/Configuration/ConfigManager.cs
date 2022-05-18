@@ -19,7 +19,10 @@ namespace BuildService.Shared.Configuration
         public static Bindable<string> svAddress;
         public static BindableInt svwsPort;
         public static BindableInt svhttpPort;
-        
+
+        public static Bindable<string> authUsername;
+        public static Bindable<string> authPassword;
+
         public static Bindable<string> sysRootDataLocation;
 
 
@@ -40,6 +43,9 @@ namespace BuildService.Shared.Configuration
             svhttpPort = ReadInt(@"svhttpPort", 8080, 0, 65535);
             svwsPort = ReadInt(@"svwsPort", 8090, 0, 65535);
 
+            authUsername = ReadString(@"svauthUsername", @"admin");
+            authPassword = ReadString(@"svauthPassword", @"password");
+
             sysRootDataLocation = ReadString(@"sysRootDataLocation", Path.Combine(ApplicationDirectory, @"build_data"));
 
             SaveConfig();
@@ -55,6 +61,7 @@ namespace BuildService.Shared.Configuration
         {
             { @"global",    @"global.cfg"    },
             { @"sys",       @"system.cfg"    },
+            { @"auth",      @"auth.cfg"      },
             { @"sv",        @"services.cfg"  }
         };
 
