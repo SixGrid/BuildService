@@ -14,7 +14,7 @@ namespace BuildService.Shared.WebSocketProcessing
             if (server.BuildController == null) return;
             var buildable = server.BuildController.GetBuildable(target);
             if (buildable == null) return;
-            var instance = new BuildInstance(server.BuildController, buildable);
+            var instance = buildable.CreateBuild();
             instance.BuildMessageEvent += (sender, args) =>
             {
                 if (wrapper.State == WebSocketState.Open)
