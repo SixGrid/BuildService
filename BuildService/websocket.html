@@ -22,8 +22,8 @@
         width: 100vw;
     }
     table.response tr td {
-        width: 50vw;
-        max-width: 50vw;
+        width: calc(50vw - 30px);
+        max-width: calc(50vw - 30px);
     }
 
     table.response, .response tr, .response td, .response th {
@@ -61,7 +61,9 @@
     img {
         vertical-align: middle;
     }
-
+    textarea {
+        height: 130px;
+    }
     table[action=buildStatusTable] {
         max-height: 200px;
         width: 600px;
@@ -75,6 +77,10 @@
         vertical-align: top;
         width: 600px;
         overflow: auto;
+    }
+    [action=connectionStatusImage] {
+        -webkit-filter: drop-shadow(1px 1px 0 gray) drop-shadow(-1px -1px 0 white);
+        fliter: drop-shadow(1px 1px 0 gray) drop-shadow(-1px -1px 0 white);
     }
 </style>
 <table>
@@ -100,11 +106,11 @@
         </td>
     </tr>
     <tr>
-        <td rowspan="3">
-            <span>Send Message</span>
-            <button action="send">send</button><br>
-            <textarea cols=60 rows=6></textarea>
-        </td>
+<!--        <td rowspan="3">-->
+<!--            <span>Send Message</span>-->
+<!--            <button action="send" disabled>send</button><br>-->
+<!--            <textarea cols=60 rows=6 disabled></textarea>-->
+<!--        </td>-->
         <td>
             <fieldset>
                 <legend>Builds</legend>
@@ -139,9 +145,9 @@
         buttonConnect = document.querySelector("button[action=connect]"),
         output = document.querySelector("#output"),
         textarea = document.querySelector("textarea"),
-        wsUri = "$WEBSOCKET_URL",
+        wsUri = `ws://$CREDENTIAL_INJECT@${window.location.host}/socket/`,
         websocket = null;
-    button.addEventListener("click", onClickButton);
+    // button.addEventListener("click", onClickButton);
     buttonConnect.addEventListener("click", onClickButtonConnect);
 
     var targetDictionary = {}
@@ -209,9 +215,12 @@
         }
         websocket.onopen = function (e) {
             writeToScreen(`CONNECTED -> ${wsUri}`);
+            setTimeout(() => {
+                doSend(`BuildService.Shared.WebSocketProcessing.AvailableBuildsMessage\n{}`)
+            }, 300)
         };
 
-        websocket.onclose = function (e) {https://t.co/kPiO90lB7g
+        websocket.onclose = function (e) {
             writeToScreen("DISCONNECTED");
         };
 
@@ -242,7 +251,10 @@
                     reloadSignatureStatus()
 					break;
                 case 'BuildService.Shared.Build.BuildInstanceMessageEventArgs':
-                    let parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+                    let parentElement = null
+                    try {
+                        parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+                    } catch (error) {}
                     if (parentElement == null)
                         document.querySelector(`[action=buildResponse]`).innerHTML += `<div buildID="${data.buildID}"></div>`
                     parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
