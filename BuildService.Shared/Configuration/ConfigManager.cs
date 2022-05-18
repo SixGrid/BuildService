@@ -16,10 +16,12 @@ namespace BuildService.Shared.Configuration
         public static readonly string ApplicationDirectory = AppContext.BaseDirectory;
         public static readonly string ConfigDirectory = Path.Combine(ApplicationDirectory, @"AppConfig");
 
-        public static Bindable<string> svwsAddress;
+        public static Bindable<string> svAddress;
         public static BindableInt svwsPort;
-        public static BindableBool svwsInsecure;
+        public static BindableInt svhttpPort;
+        
         public static Bindable<string> sysRootDataLocation;
+
 
         static ConfigManager()
         {
@@ -34,9 +36,9 @@ namespace BuildService.Shared.Configuration
                 ReadConfigFile(Path.Combine(ConfigDirectory, entry.Value), entry);
             }
 
-            svwsAddress = ReadString(@"svwsAddress", "127.0.0.1");
+            svAddress = ReadString(@"svAddress", "127.0.0.1");
+            svhttpPort = ReadInt(@"svhttpPort", 8080, 0, 65535);
             svwsPort = ReadInt(@"svwsPort", 8090, 0, 65535);
-            svwsInsecure = ReadBool(@"svwsInsecure", true);
 
             sysRootDataLocation = ReadString(@"sysRootDataLocation", Path.Combine(ApplicationDirectory, @"build_data"));
 
