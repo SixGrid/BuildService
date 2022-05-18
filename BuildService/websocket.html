@@ -42,21 +42,18 @@
         display: flex;
         flex-direction: column-reverse;
     }
-    div.spitcontent dir {
-        flex-direction: column;
-    }
 
     body {
         background: #303030;
         color: #f0f0f0;
     }
 
-    #output pre {
+    div.spitcontent pre {
         background: #303030;
         color: #f0f0f0;
         padding: 4px;
         margin: 0;
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid #616161;
     }
     img {
         vertical-align: middle;
@@ -202,10 +199,18 @@
         if (message.toString().length < 4) return
         output.innerHTML = "<p>" + message + "</p>" + output.innerHTML
     }
+    
+    while ( document.querySelector("#output").children.length >= 500)
+    {
+        output.removeChild(output.firstElementChild)
+        console.log(document.querySelector("#output").children.length)
+    }
+    
     writeToScreen(`DISCONNECTED`);
 
     function onClickButtonConnect() {
         websocket = new WebSocket(wsUri);
+        writeToScreen("CONNECTING")
         doSend = (message) => {
             writeToScreen(`<div><pre><h3>send</h3><code>${message}</code></pre></div>`)
             let split = message.split('\n')
@@ -218,10 +223,12 @@
             setTimeout(() => {
                 doSend(`BuildService.Shared.WebSocketProcessing.AvailableBuildsMessage\n{}`)
             }, 300)
+            document.querySelector('button[action=connect]').setAttribute('disabled', '')
         };
 
         websocket.onclose = function (e) {
             writeToScreen("DISCONNECTED");
+            document.querySelector('button[action=connect]').removeAttribute('disabled')
         };
 
         websocket.onmessage = async function (e, ...p) {
@@ -251,25 +258,34 @@
                     reloadSignatureStatus()
 					break;
                 case 'BuildService.Shared.Build.BuildInstanceMessageEventArgs':
-                    let parentElement = null
-                    try {
-                        parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
-                    } catch (error) {}
-                    
-                    if (parentElement == null)
-                    {
-                        let child = document.createElement('div')
-                        child.setAttribute('buildID', data.buildID)
-                        document.querySelector(`[action=buildResponse]`).appendChild(child)
-                        parentElement = child
-                    }
-                    else
-                    {
-                        parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
-                    }
+                    // let parentElement = null
+                    // try {
+                    //     parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+                    // } catch (error) {}
+                    //
+                    // if (parentElement == null)
+                    // {
+                    //     let child = document.createElement('div')
+                    //     child.setAttribute('buildID', data.buildID)
+                    //     document.querySelector(`[action=buildResponse]`).appendChild(child)
+                    //     parentElement = child
+                    // }
+                    // else
+                    // {
+                    //     parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+                    // }
+                    let parentElement = document.querySelector(`[action=buildResponse]`)
 
                     if (data.content != null && data.content.length > 0)
-                        parentElement.innerHTML += `<pre><code timestamp="${data.timestamp}" outputType="${data.outputType}">${data.content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>\n`
+                        parentElement.innerHTML = `<pre><code timestamp="${data.timestamp}" outputType="${data.outputType}">${data.content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>\n` + parentElement.innerHTML
+                    let wbreak = true
+                    
+                    let welem = document.querySelector(`[action=buildResponse]`)
+                    while (welem.children.length >= 700)
+                    {
+                        welem.removeChild(welem.firstElementChild)
+                    }
+                    wbreak = false
                     break;
                 case 'BuildService.Shared.Build.BuildInstanceStatus':
                     if (data.Status == enumBuildStatus.Done && targetDictionary[data.Signature].CurrentBuildStatus != data.Status)
@@ -278,6 +294,11 @@
                     reloadSignatureStatus()
                     break;
 			}
+            
+            while ( document.querySelector("#output").children.length >= 500)
+            {
+                output.removeChild(output.firstElementChild)
+            }
         };
 
         websocket.onerror = function (e) {
