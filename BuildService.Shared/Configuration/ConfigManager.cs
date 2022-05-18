@@ -43,8 +43,8 @@ namespace BuildService.Shared.Configuration
             svhttpPort = ReadInt(@"svhttpPort", 8080, 0, 65535);
             svwsPort = ReadInt(@"svwsPort", 8090, 0, 65535);
 
-            authUsername = ReadString(@"svauthUsername", @"admin");
-            authPassword = ReadString(@"svauthPassword", @"password");
+            authUsername = ReadString(@"authUsername", @"admin");
+            authPassword = ReadString(@"authPassword", @"password");
 
             sysRootDataLocation = ReadString(@"sysRootDataLocation", Path.Combine(ApplicationDirectory, @"build_data"));
 
