@@ -13,6 +13,11 @@ namespace BuildService.Shared.Build
         {
             this.controller = controller;
             RelativeLocation = repositoryRelativeLocation;
+
+            if (!Directory.Exists(Path.Combine(controller.Options.BuildOutputBasePath, Organization, Repository,
+                    @"latest")))
+                Directory.CreateDirectory(Path.Combine(controller.Options.BuildOutputBasePath, Organization, Repository,
+                    @"latest"));
         }
 
         public string RelativeLocation { get; private set; }
