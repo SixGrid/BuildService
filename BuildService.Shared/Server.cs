@@ -31,6 +31,11 @@ namespace BuildService.Shared
             Thread threadBuildController = new Thread(new ThreadStart(() => Thread_BuildController(waithandleBuildController)));
             WaitHandleList.Add(waithandleBuildController);
             ThreadList.Add(threadBuildController);
+            
+            EventWaitHandle waithandleHTTPServer = new EventWaitHandle(false, EventResetMode.ManualReset);
+            Thread threadHTTPServer  = new Thread(new ThreadStart(() => WebServer.Instance.WebServerThread(waithandleBuildController)));
+            WaitHandleList.Add(waithandleHTTPServer);
+            ThreadList.Add(threadHTTPServer);
         }
 
         public Thread RegisterThread(ThreadStart tstart)
@@ -64,7 +69,7 @@ namespace BuildService.Shared
             handle.Set();
         }
 
-        public string WebSocketServerAddress = String.Format(@"ws://{0}:{1}", ConfigManager.svwsAddress, ConfigManager.svwsPort);
+        public string WebSocketServerAddress = String.Format(@"ws://{0}:{1}", ConfigManager.svAddress, ConfigManager.svwsPort);
 
         public WebSocketServerExtension WebSocketServer;
         
