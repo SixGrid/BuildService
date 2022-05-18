@@ -9,9 +9,9 @@ namespace BuildService.Shared.Build
     {
         private BuildController controller;
         
-        public BuildableItem(BuildController _controller, string repositoryRelativeLocation)
+        public BuildableItem(BuildController controller, string repositoryRelativeLocation)
         {
-            controller = _controller;
+            this.controller = controller;
             RelativeLocation = repositoryRelativeLocation;
         }
 
