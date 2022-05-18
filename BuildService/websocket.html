@@ -255,9 +255,18 @@
                     try {
                         parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
                     } catch (error) {}
+                    
                     if (parentElement == null)
-                        document.querySelector(`[action=buildResponse]`).innerHTML += `<div buildID="${data.buildID}"></div>`
-                    parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+                    {
+                        let child = document.createElement('div')
+                        child.setAttribute('buildID', data.buildID)
+                        document.querySelector(`[action=buildResponse]`).appendChild(child)
+                        parentElement = child
+                    }
+                    else
+                    {
+                        parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
+                    }
 
                     if (data.content != null && data.content.length > 0)
                         parentElement.innerHTML += `<pre><code timestamp="${data.timestamp}" outputType="${data.outputType}">${data.content}</code></pre>\n`
