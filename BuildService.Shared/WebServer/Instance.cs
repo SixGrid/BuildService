@@ -15,7 +15,7 @@ public static class Instance
 
     public static string WebDataWithTemplatedStrings = @"";
     public static string WebData =>
-        WebDataWithTemplatedStrings.Replace(@"$WEBSOCKET_URL", $@"ws://$HTTP_HOST:{ConfigManager.svwsPort}/");
+        WebDataWithTemplatedStrings.Replace(@"$WEBSOCKET_URL", $@"ws://{ConfigManager.authUsername}:{ConfigManager.authPassword}@$HTTP_HOST:{ConfigManager.svwsPort}/");
     public static void WebServerThread(EventWaitHandle handle)
     {   
         var assembly = Assembly.GetExecutingAssembly();
