@@ -7,7 +7,8 @@ namespace BuildService.Shared.Build
     {
         Unknown,
         InProgress,
-        Done
+        Done,
+        ReadyToBuild
     }
     public interface IBuildStatus
     {
