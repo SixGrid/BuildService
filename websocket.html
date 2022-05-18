@@ -1,26 +1,43 @@
 <!doctype html>
 <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
     textarea { vertical-align: bottom; }
     #output { overflow: auto; }
     #output > p { overflow-wrap: break-word; }
     #output span { color: blue; }
     #output span.error { color: red; }
     fieldset { width: fit-content; }
-    table {
+    p {
+        margin: 0;
+    }
+    table.response {
         width: 100vw;
         position: absolute;
         left: 0;
     }
-    tr { width: 100vw; }
-    tr td {width: 50vw;max-width: 50vw;}
+    table.response tr {
+        width: 100vw;
+    }
+    table.response tr td {
+        width: 50vw;
+        max-width: 50vw;
+    }
 
-    table, tr, td, th {
+    table.response, .response tr, .response td, .response th {
         border: 1px solid #f0f0f0;
         margin-top: 0;
         vertical-align: top;
     }
+    table.outline, table.outline tr, table.outline td, table.outline th {
+        border: 1px solid #f0f0f0;
+        vertical-align: top;
+    }
+
     div.spitcontent {
-        height: 80vh;
+        height: calc(100vh - 250px);
         overflow-y: auto;
         display: flex;
         flex-direction: column-reverse;
@@ -41,20 +58,67 @@
         margin: 0;
         border-bottom: 1px solid #f0f0f0;
     }
-</style>
-<textarea cols=60 rows=6></textarea>
-<button action="send">send</button>
-<button action="connect">connect</button>
-<fieldset>
-	<legend>Builds</legend>
-	<button action="getAvailableBuilds">Get Available Builds</button><br>
-	
-	<select action="availableBuilds">
+    img {
+        vertical-align: middle;
+    }
 
-	</select>
-	<button action="runSelectedBuild">Start Build</button>
-</fieldset>
+    table[action=buildStatusTable] {
+        max-height: 200px;
+        width: 600px;
+        margin-top: 0;
+        vertical-align: top;
+    }
+    .buildStatusAll > div {
+        max-height: 200px;
+        height: 200px;
+        margin-top: 0;
+        vertical-align: top;
+        width: 600px;
+        overflow: auto;
+    }
+</style>
 <table>
+    <tr>
+        <td style="display: inline-flex;">
+            <button action="connect">connect</button>
+        </td>
+        <td rowspan="2" class="buildStatusAll">
+            <div>
+                <table action="buildStatusTable" class="outline">
+                    <thead>
+                        <tr>
+                            <th>signature</th>
+                            <th>status</th>
+                            <th>latest build ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td rowspan="3">
+            <span>Send Message</span>
+            <button action="send">send</button><br>
+            <textarea cols=60 rows=6></textarea>
+        </td>
+        <td>
+            <fieldset>
+                <legend>Builds</legend>
+                <button action="getAvailableBuilds">Get Available Builds</button><br>
+                
+                <select action="availableBuilds">
+            
+                </select>
+                <button action="runSelectedBuild">Start Build</button>
+            </fieldset>
+        </td>
+    </tr>
+</table>
+<table class="response">
     <tr>
         <th>Raw Responses</th>
         <th>Build Results</th>
@@ -71,30 +135,66 @@
     </tr>
 </table>
 <script type="text/javascript">
-    // http://www.websocket.org/echo.html
-
     var button = document.querySelector("button[action=send]"),
         buttonConnect = document.querySelector("button[action=connect]"),
         output = document.querySelector("#output"),
         textarea = document.querySelector("textarea"),
-        // wsUri = "ws://echo.websocket.org/",
         wsUri = "ws://127.0.0.1:8090",
         websocket = null;
     button.addEventListener("click", onClickButton);
     buttonConnect.addEventListener("click", onClickButtonConnect);
 
+    var targetDictionary = {}
+
+    var enumBuildStatus = {
+        0: 'Unknown',
+        Unknown: 0,
+        1: 'InProgress',
+        InProgress: 1,
+        2: 'Done',
+        Done: 2,
+        3: 'ReadyToBuild',
+        ReadyToBuild: 3
+    }
+
+    function fetchBuildStatusIcon(status) {
+        let statusDict = [
+            'fuge-3.5.6/icons/question.png',
+            'fuge-3.5.6/icons/arrow-circle.png',
+            'fuge-3.5.6/icons/tick-circle.png',
+            'fuge-3.5.6/icons/tick-circle.png',
+        ]
+        return statusDict[status]
+    }
+
+    function reloadSignatureStatus () {
+        let entries = Object.entries(targetDictionary)
+
+        document.querySelector('table[action=buildStatusTable] tbody').innerHTML = ''
+        for (let i = 0; i < entries.length; i++) {
+            document.querySelector('table[action=buildStatusTable] tbody').innerHTML += `
+            <tr>
+                <td><code>${entries[i][0]}</code></td>
+                <td style="width: 200px;"><img src="https://res.kate.pet/icons/${fetchBuildStatusIcon(entries[i][1].CurrentBuildStatus)}" /><code>${enumBuildStatus[entries[i][1].CurrentBuildStatus]}</code></td>
+                <td><code>${entries[i][1].LatestBuildID}</code></td>
+            </tr>`
+        }
+    }
+
     var doSend = null
-	document.querySelector("button[action=getAvailableBuilds]").addEventListener("click", () => {
+	document.querySelector("button[action=getAvailableBuilds]").addEventListener("click", () => getAvailableBuilds())
+    function getAvailableBuilds () {
 		if (websocket == null || doSend == null) return;
 		
 		doSend(`BuildService.Shared.WebSocketProcessing.AvailableBuildsMessage\n{}`)
-	})
+    }
 	document.querySelector("button[action=runSelectedBuild]").addEventListener("click", () => {
 		doSend(`BuildService.Shared.WebSocketProcessing.ExecuteBuildMessage\n{"target": "${document.querySelector("[action=availableBuilds]").selectedOptions[0].value}"}`)
 	})
 
     function writeToScreen(message) {
-        output.insertAdjacentHTML("afterbegin", "<p>" + message + "</p>");
+        if (message.toString().length < 4) return
+        output.innerHTML = "<p>" + message + "</p>" + output.innerHTML
     }
     writeToScreen(`DISCONNECTED`);
 
@@ -133,6 +233,13 @@
 					setTimeout(() => {
 						document.querySelector("[action=availableBuilds]").innerHTML = processedHTML
 					}, 100)
+                    targetDictionary = Object.fromEntries(data.map(v => {
+                        return [
+                            v.RelativeLocation,
+                            v
+                        ]
+                    }))
+                    reloadSignatureStatus()
 					break;
                 case 'BuildService.Shared.Build.BuildInstanceMessageEventArgs':
                     let parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
@@ -140,14 +247,21 @@
                         document.querySelector(`[action=buildResponse]`).innerHTML += `<div buildID="${data.buildID}"></div>`
                     parentElement = document.querySelector(`[action=buildResponse] div[buildID=${data.buildID}]`)
 
-                    if (data.content.length > 0)
+                    if (data.content != null && data.content.length > 0)
                         parentElement.innerHTML += `<pre><code timestamp="${data.timestamp}" outputType="${data.outputType}">${data.content}</code></pre>\n`
+                    break;
+                case 'BuildService.Shared.Build.BuildInstanceStatus':
+                    if (data.Status == enumBuildStatus.Done && targetDictionary[data.Signature].CurrentBuildStatus != data.Status)
+                        getAvailableBuilds()
+                    targetDictionary[data.Signature].CurrentBuildStatus = data.Status
+                    reloadSignatureStatus()
                     break;
 			}
         };
 
         websocket.onerror = function (e) {
-            writeToScreen("<span class=error>ERROR:</span> " + e.data);
+            console.log(e)
+            writeToScreen("<span class=error>ERROR:</span> " + e);
         };
     }
 
