@@ -145,7 +145,7 @@
         buttonConnect = document.querySelector("button[action=connect]"),
         output = document.querySelector("#output"),
         textarea = document.querySelector("textarea"),
-        wsUri = `ws://$CREDENTIAL_INJECT@${window.location.host}/socket/`,
+        wsUri = `ws${window.location.protocol.replace('http', '')}//$CREDENTIAL_INJECT@${window.location.host}/socket/`,
         websocket = null;
     // button.addEventListener("click", onClickButton);
     buttonConnect.addEventListener("click", onClickButtonConnect);
