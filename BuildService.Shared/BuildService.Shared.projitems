@@ -35,7 +35,4 @@
     <Compile Include="$(MSBuildThisFileDirectory)WebSocket\ReadOnly.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebSocket\Root.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)websocket.html" />
-  </ItemGroup>
 </Project>

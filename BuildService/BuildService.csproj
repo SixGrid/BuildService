@@ -18,6 +18,11 @@
 		<PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="websocket.html" />
+	  <EmbeddedResource Include="websocket.html" />
+	</ItemGroup>
+
 	<Import Project="..\BuildService.Shared\BuildService.Shared.projitems" Label="Shared" />
 
 </Project>
