@@ -1,0 +1,74 @@
+name: Build Release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Github Release Tag"
+        required: true
+      name:
+        description: "Github Release Name"
+        required: true
+      description:
+        description: "Github Release Description"
+        required: false
+
+jobs:
+  mktag:
+    runs-on: ubuntu-latest
+
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      web_url: ${{ steps.create_release.outputs.html_url }}
+
+    permissions: write-all
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Create Release Draft
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          release_name: ${{ github.event.inputs.name }}
+          draft: false
+          prerelease: true
+
+  build:
+    needs: mktag
+
+    runs-on: ${{matrix.os}}
+
+    permissions: write-all
+    strategy:
+      matrix:
+        - os: ubuntu-latest
+          dotnet: "6.0.x"
+          artifact_name: BuildService.linux-amd64.zip
+          asset_name: bundle.zip
+    name: Build and Publish
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{matrix.dotnet}}
+      - run: dotnet build BuildService -c Release
+
+      - name: Compress Artifacts
+        uses: papeloto/action-zip@v1
+        with:
+          files: BuildService/bin/Release/net6.0/
+          dest: bundle.zip
+
+      - name: Upload binaries to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.mktag.outputs.upload_url }}
+          asset_path: ./${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          asset_content_type: application/octet-stream
