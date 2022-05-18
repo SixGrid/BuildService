@@ -228,7 +228,7 @@
 			let text = await e.data.text()
             let split = text.split('\n')
             split[1] = JSON.stringify(JSON.parse(split[1]), null, '\t')
-            writeToScreen(`<div><pre><h3>response</h3><code>${split.join('\n')}</code></pre></div>`);
+            writeToScreen(`<div><pre><h3>response</h3><code>${split.join('\n').replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre></div>`);
             
             let data = JSON.parse(split[1])
             
@@ -269,7 +269,7 @@
                     }
 
                     if (data.content != null && data.content.length > 0)
-                        parentElement.innerHTML += `<pre><code timestamp="${data.timestamp}" outputType="${data.outputType}">${data.content}</code></pre>\n`
+                        parentElement.innerHTML += `<pre><code timestamp="${data.timestamp}" outputType="${data.outputType}">${data.content.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</code></pre>\n`
                     break;
                 case 'BuildService.Shared.Build.BuildInstanceStatus':
                     if (data.Status == enumBuildStatus.Done && targetDictionary[data.Signature].CurrentBuildStatus != data.Status)
