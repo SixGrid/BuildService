@@ -11,13 +11,14 @@ namespace BuildService.Shared.Helpers
     {
         public static string GenerateToken(int length)
         {
-            using (var cryptRng = new RNGCryptoServiceProvider())
+            const string valid = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            while (0 < length--)
             {
-                byte[] tokenBuffer = new byte[length];
-                cryptRng.GetBytes(tokenBuffer);
-                var reg = new Regex("[^a-zA-Z0-9]");
-                return reg.Replace(Convert.ToBase64String(tokenBuffer), @"");
+                res.Append(valid[rnd.Next(valid.Length)]);
             }
+            return res.ToString();
         }
         public const int MAX_PATH_LENGTH = 248;
 
