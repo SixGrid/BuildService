@@ -22,6 +22,7 @@ namespace BuildService.Shared.Configuration
 
         public static Bindable<string> authUsername;
         public static Bindable<string> authPassword;
+        public static BindableBool authEnable;
 
         public static Bindable<string> sysRootDataLocation;
 
@@ -45,6 +46,7 @@ namespace BuildService.Shared.Configuration
 
             authUsername = ReadString(@"authUsername", @"admin");
             authPassword = ReadString(@"authPassword", @"password");
+            authEnable = ReadBool(@"authEnable", true);
 
             sysRootDataLocation = ReadString(@"sysRootDataLocation", Path.Combine(ApplicationDirectory, @"build_data"));
 
