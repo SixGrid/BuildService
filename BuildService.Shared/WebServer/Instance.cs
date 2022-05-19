@@ -21,14 +21,14 @@ public static class Instance
         {
             if (ConfigManager.authEnable)
             {
-                return WebDataWithTemplatedStrings.Replace(@"WEBSOCKET_URL", $@"ws://$HTTP_HOST:{ConfigManager.svwsPort}")
-                    .Replace($@"$CREDENTIAL_INJECT", @"");
+                return WebDataWithTemplatedStrings
+                    .Replace(@"$WEBSOCKET_URL",
+                        $@"ws://{ConfigManager.authUsername}:{ConfigManager.authPassword}@$HTTP_HOST:{ConfigManager.svwsPort}/")
+                    .Replace(@"$CREDENTIAL_INJECT", 
+                        $@"{ConfigManager.authUsername}:{ConfigManager.authPassword}@");
             }
-            return WebDataWithTemplatedStrings
-                .Replace(@"$WEBSOCKET_URL",
-                    $@"ws://{ConfigManager.authUsername}:{ConfigManager.authPassword}@$HTTP_HOST:{ConfigManager.svwsPort}/")
-                .Replace(@"$CREDENTIAL_INJECT", 
-                    $@"{ConfigManager.authUsername}:{ConfigManager.authPassword}@");
+            return WebDataWithTemplatedStrings.Replace(@"WEBSOCKET_URL", $@"ws://$HTTP_HOST:{ConfigManager.svwsPort}")
+                .Replace($@"$CREDENTIAL_INJECT", @"");
         }
         set { }
     }
