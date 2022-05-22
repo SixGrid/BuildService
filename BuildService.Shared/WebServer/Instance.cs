@@ -15,12 +15,24 @@ public static class Instance
 
     public static string WebDataWithTemplatedStrings = @"";
 
-    public static string WebData =>
-        WebDataWithTemplatedStrings
-            .Replace(@"$WEBSOCKET_URL",
-                $@"ws://{ConfigManager.authUsername}:{ConfigManager.authPassword}@$HTTP_HOST:{ConfigManager.svwsPort}/")
-            .Replace(@"$CREDENTIAL_INJECT", 
-                $@"{ConfigManager.authUsername}:{ConfigManager.authPassword}");
+    public static string WebData
+    {
+        get
+        {
+            if (ConfigManager.authEnable)
+            {
+                return WebDataWithTemplatedStrings
+                    .Replace(@"$WEBSOCKET_URL",
+                        $@"ws://{ConfigManager.authUsername}:{ConfigManager.authPassword}@$HTTP_HOST:{ConfigManager.svwsPort}/")
+                    .Replace(@"$CREDENTIAL_INJECT", 
+                        $@"{ConfigManager.authUsername}:{ConfigManager.authPassword}@");
+            }
+            return WebDataWithTemplatedStrings.Replace(@"WEBSOCKET_URL", $@"ws://$HTTP_HOST:{ConfigManager.svwsPort}")
+                .Replace($@"$CREDENTIAL_INJECT", @"");
+        }
+        set { }
+    }
+    
     public static void WebServerThread(EventWaitHandle handle)
     {   
         var assembly = Assembly.GetExecutingAssembly();
@@ -40,7 +52,8 @@ public static class Instance
         // Create a Http server and start listening for incoming connections
         listener = new HttpListener();
         listener.Prefixes.Add(url);
-        listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
+        if (ConfigManager.authEnable)
+            listener.AuthenticationSchemes = AuthenticationSchemes.Basic;
         listener.Start();
         Console.WriteLine("Listening for connections on {0}", url);
 
@@ -72,13 +85,20 @@ public static class Instance
                 if (req.Url != null) Console.WriteLine(req.Url.ToString());
 
                 bool isAuthenticated = false;
-                
-                HttpListenerBasicIdentity? identity = (HttpListenerBasicIdentity)ctx.User!.Identity!;
-                if (identity == null)
-                    isAuthenticated = false;
+
+                if (ConfigManager.authEnable)
+                {
+                    HttpListenerBasicIdentity? identity = (HttpListenerBasicIdentity)ctx.User!.Identity!;
+                    if (identity == null)
+                        isAuthenticated = false;
+                    else
+                        isAuthenticated = identity.Name == ConfigManager.authUsername &&
+                                          identity.Password == ConfigManager.authPassword;
+                }
                 else
-                    isAuthenticated = identity.Name == ConfigManager.authUsername &&
-                                      identity.Password == ConfigManager.authPassword;
+                {
+                    isAuthenticated = true;
+                }
 
                 // Write the response info
                 string disableSubmit = !runServer ? "disabled" : "";

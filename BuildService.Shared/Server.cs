@@ -82,8 +82,11 @@ namespace BuildService.Shared
             WebSocketServer.AddWebSocketService<WebSocket.Root>(@"/");
             WebSocketServer.Realm = String.Format(@"BuildService");
 
-            WebSocketServer.UserCredentialsFinder = WebSocketServerCredentialHandle;
-            WebSocketServer.AuthenticationSchemes = AuthenticationSchemes.Basic;
+            if (ConfigManager.authEnable)
+            {
+                WebSocketServer.UserCredentialsFinder = WebSocketServerCredentialHandle;
+                WebSocketServer.AuthenticationSchemes = AuthenticationSchemes.Basic;
+            }
             
             WebSocketServer.Start();
 
