@@ -46,6 +46,9 @@ namespace BuildService.Shared.Build
 
         private void initalizeStartInformation()
         {
+            var repoInfo = TargetItem.GetRepoInfo();
+            StartInformation.Environment.Add(@"git_branch", repoInfo.Head.FriendlyName);
+            
             StartInformation.Environment.Add(@"basedir", controller.Options.BasePath);
             StartInformation.Environment.Add(@"basedir_repos", controller.Options.RepositoryBasePath);
             StartInformation.Environment.Add(@"basedir_builds", controller.Options.BuildOutputBasePath);

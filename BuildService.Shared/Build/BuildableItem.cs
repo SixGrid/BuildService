@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using LibGit2Sharp;
 using Newtonsoft.Json;
 
 namespace BuildService.Shared.Build
@@ -38,6 +39,11 @@ namespace BuildService.Shared.Build
             var buildable = controller.GetBuildable(RelativeLocation);
             if (buildable == null) return null;
             return controller.Server.BuildController != null ? new BuildInstance(controller.Server.BuildController, buildable) : null;
+        }
+
+        public Repository GetRepoInfo()
+        {
+            return new Repository(Location);
         }
     }
 }
