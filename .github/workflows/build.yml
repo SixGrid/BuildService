@@ -49,6 +49,12 @@ jobs:
             dotnet: "6.0.x"
             artifact_name: bundle.zip
             asset_name: BuildService.linux-amd64.zip
+            extra_arguments: ""
+          - os: ubuntu-latest
+            dotnet: "6.0.x"
+            artifact_name: bundle.zip
+            asset_name: BuildService.selfcontained.linux-amd64.zip
+            extra_arguments: "--sc true -f net6.0 -r linux-x64"
     name: Build and Publish
     steps:
       - uses: actions/checkout@v3
@@ -56,7 +62,7 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: ${{matrix.dotnet}}
-      - run: dotnet build BuildService -c Release
+      - run: dotnet build BuildService -c Release ${{matrix.extra_arguments}}
 
       - name: Compress Artifacts
         uses: papeloto/action-zip@v1
