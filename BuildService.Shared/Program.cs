@@ -7,7 +7,7 @@ namespace BuildService.Shared
 {
     public static class MainClass
     {
-        public static Server Server = new Server();
+        public static Server Server;
         public static string BuildScriptExtension
         {
             get
@@ -20,8 +20,23 @@ namespace BuildService.Shared
             }
             set { }
         }
+
         public static void Main(string[] args)
         {
+            if (args.Length > 0 && args[0] == @"-serer")
+            {
+                InitalizeServer();
+            }
+            else
+            {
+                Console.Error.WriteLine(@"pls launch with the single argument '-server' to launch the BuildService server ;w;");
+                Environment.Exit(1);
+            }
+        }
+
+        private static void InitalizeServer()
+        {
+            Server = new Server();
             Server.InitalizeServer();
             Server.StartThreads();
             Console.ReadKey(true);
