@@ -9,6 +9,14 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "BuildService.Shared", "Buil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildService.Client.WinForms", "BuildService.Client.WinForms\BuildService.Client.WinForms.csproj", "{EB1C5B10-C62A-4746-8319-F95AC658DA6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildServiceCommon", "BuildServiceCommon\BuildServiceCommon.csproj", "{C939597B-3605-4905-AC97-706D3CFB97C0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{B3369C50-5AC3-4959-AE3E-83C8BE881DC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{CB350EC8-5AD4-4A7F-B90C-409A00762385}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{39C35BC9-3044-4D18-9B59-405EC976D106}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		BuildService.Shared\BuildService.Shared.projitems*{0e4cc25f-6f8f-41be-9af5-d6846d53be72}*SharedItemsImports = 13
@@ -28,9 +36,19 @@ Global
 		{EB1C5B10-C62A-4746-8319-F95AC658DA6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB1C5B10-C62A-4746-8319-F95AC658DA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB1C5B10-C62A-4746-8319-F95AC658DA6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C939597B-3605-4905-AC97-706D3CFB97C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C939597B-3605-4905-AC97-706D3CFB97C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C939597B-3605-4905-AC97-706D3CFB97C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C939597B-3605-4905-AC97-706D3CFB97C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A36F2C84-EAB2-4C1A-AB53-6795B05A0DCF} = {CB350EC8-5AD4-4A7F-B90C-409A00762385}
+		{0E4CC25F-6F8F-41BE-9AF5-D6846D53BE72} = {B3369C50-5AC3-4959-AE3E-83C8BE881DC1}
+		{EB1C5B10-C62A-4746-8319-F95AC658DA6A} = {39C35BC9-3044-4D18-9B59-405EC976D106}
+		{C939597B-3605-4905-AC97-706D3CFB97C0} = {B3369C50-5AC3-4959-AE3E-83C8BE881DC1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3595C5FF-6579-4A5F-86BA-8DFBEF7B1680}

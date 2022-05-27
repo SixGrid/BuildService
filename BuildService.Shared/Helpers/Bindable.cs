@@ -1,5 +1,6 @@
 ﻿using System;
 using BuildService.Shared.Configuration;
+using BuildServiceCommon.Helpers;
 
 namespace BuildService.Shared.Helpers
 {

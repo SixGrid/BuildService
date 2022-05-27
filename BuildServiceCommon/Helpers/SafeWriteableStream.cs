@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace BuildService.Shared.Helpers
+namespace BuildServiceCommon.Helpers
 {
     public class SafeWriteStream : FileStream
     {
@@ -22,7 +22,7 @@ namespace BuildService.Shared.Helpers
             if (!isDisposed) Dispose();
         }
 
-        internal void Abort()
+        public void Abort()
         {
             aborted = true;
         }

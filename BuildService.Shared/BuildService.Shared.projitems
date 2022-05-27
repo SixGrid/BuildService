@@ -19,8 +19,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Build\BuildStatusObject.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Configuration\ConfigManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Bindable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\GeneralHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Helpers\SafeWriteableStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Program.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Server.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)WebServer\Instance.cs" />

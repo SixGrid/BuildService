@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using BuildService.Shared.Helpers;
+using BuildServiceCommon.Helpers;
 
 namespace BuildService.Shared.Build
 {

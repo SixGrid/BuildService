@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using BuildService.Shared.Helpers;
+using BuildServiceCommon.Helpers;
 using BuildService.Shared.WebSocketService;
 
 namespace BuildService.Shared.Build

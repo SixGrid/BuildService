@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BuildService.Shared.Helpers;
+using BuildServiceCommon.Helpers;
 
 namespace BuildService.Shared.Configuration
 {

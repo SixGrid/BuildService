@@ -47,6 +47,10 @@
 	  <EmbeddedResource Include="websocket.html" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\BuildServiceCommon\BuildServiceCommon.csproj" />
+	</ItemGroup>
+
 	<Import Project="..\BuildService.Shared\BuildService.Shared.projitems" Label="Shared" />
 
 	<Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

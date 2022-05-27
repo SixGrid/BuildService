@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace BuildService.Shared.Helpers
+namespace BuildServiceCommon.Helpers
 {
     public static class GeneralHelper
     {
@@ -213,7 +213,7 @@ namespace BuildService.Shared.Helpers
         }
 
         [Flags]
-        internal enum MoveFileFlags
+        public enum MoveFileFlags
         {
             None = 0,
             ReplaceExisting = 1,
@@ -224,7 +224,7 @@ namespace BuildService.Shared.Helpers
             FailIfNotTrackable = 32,
         }
 
-        internal static class NativeMethods
+        public static class NativeMethods
         {
             [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
             public static extern bool MoveFileEx(
