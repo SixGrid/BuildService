@@ -1,7 +1,13 @@
 {
   "profiles": {
-    "BuildService.Windows": {
-      "commandName": "Project"
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {},
+      "distributionName": ""
+    },
+    "BuildService": {
+      "commandName": "Project",
+      "commandLineArgs": "-server"
     }
   }
 }
