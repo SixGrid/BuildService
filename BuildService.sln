@@ -7,12 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildService", "BuildServic
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "BuildService.Shared", "BuildService.Shared\BuildService.Shared.shproj", "{0E4CC25F-6F8F-41BE-9AF5-D6846D53BE72}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildService.Client.WinForms", "BuildService.Client.WinForms\BuildService.Client.WinForms.csproj", "{EB1C5B10-C62A-4746-8319-F95AC658DA6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildService.Client.WinForms", "BuildService.Client.WinForms\BuildService.Client.WinForms.csproj", "{EB1C5B10-C62A-4746-8319-F95AC658DA6A}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		BuildService.Shared\BuildService.Shared.projitems*{0e4cc25f-6f8f-41be-9af5-d6846d53be72}*SharedItemsImports = 13
 		BuildService.Shared\BuildService.Shared.projitems*{a36f2c84-eab2-4c1a-ab53-6795b05a0dcf}*SharedItemsImports = 5
+		BuildService.Shared\BuildService.Shared.projitems*{eb1c5b10-c62a-4746-8319-f95ac658da6a}*SharedItemsImports = 5
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

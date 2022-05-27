@@ -12,4 +12,6 @@
     <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
   </ItemGroup>
 
+  <Import Project="..\BuildService.Shared\BuildService.Shared.projitems" Label="Shared" />
+
 </Project>
