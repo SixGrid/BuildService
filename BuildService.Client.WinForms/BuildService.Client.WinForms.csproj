@@ -2,16 +2,55 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>BuildService.Client.WinForms.Program</StartupObject>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<TransformOnBuild>true</TransformOnBuild>
+		<OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
+		<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+	<GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibGit2Sharp" Version="0.27.0-preview-0182" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta1" />
     <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BuildServiceCommon\BuildServiceCommon.csproj" />
+  </ItemGroup>
+
   <Import Project="..\BuildService.Shared\BuildService.Shared.projitems" Label="Shared" />
+  
+  
+  <ItemGroup>
+    <None Update="Properties\VersionAutoIncrement.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VersionAutoIncrement.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\VersionAutoIncrement.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>VersionAutoIncrement.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+<ItemGroup>
+<Compile Update="Properties\VersionAutoIncrement.cs">
+<DesignTime>True</DesignTime>
+<AutoGen>True</AutoGen>
+<DependentUpon>VersionAutoIncrement.tt</DependentUpon>
+</Compile>
+</ItemGroup>
+<ItemGroup>
+  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+</ItemGroup>
+<Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v17.0\TextTemplating\Microsoft.TextTemplating.targets" />
 
 </Project>
