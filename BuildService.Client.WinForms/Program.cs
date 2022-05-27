@@ -1,15 +1,16 @@
+using BuildService.Client.WinForms.Authentication;
+
 namespace BuildService.Client.WinForms
 {
-    internal static class Program
+    public static class Program
     {
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        public static int VERSION = 1;
+
+        internal static AuthenticationManager AuthManager = new AuthenticationManager();
+
         [STAThread]
-        static void Main()
+        public static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             Application.Run(new MainDashboard());
         }
