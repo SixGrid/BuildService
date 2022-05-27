@@ -40,6 +40,8 @@ namespace BuildService.Shared
             Server.InitalizeServer();
             Server.StartThreads();
             Console.ReadKey(true);
+            Console.WriteLine(@"Goodbye!");
+            Environment.Exit(-1);
         }
     }
 }
