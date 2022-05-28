@@ -23,7 +23,7 @@ namespace BuildService.Client.WinForms.Authentication
     {
         public long CreatedAt { get; set; }
         public long UpdatedAt { get; set; }
-        private void rUpdatedAt()
+        public void rUpdatedAt()
         {
             UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
@@ -60,7 +60,6 @@ namespace BuildService.Client.WinForms.Authentication
 
         public void WriteToStream(SerializationWriter sw)
         {
-            rUpdatedAt();
             sw.Write(Username);
             sw.Write(Passphrase);
             sw.Write(CreatedAt);
