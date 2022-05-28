@@ -8,10 +8,11 @@ using BuildServiceCommon.Helpers;
 
 namespace BuildService.Client.WinForms.Authentication
 {
-    internal class AuthenticationManager
+    public class AuthenticationManager
     {
-        internal AuthenticationManager()
+        public AuthenticationManager()
         {
+            InitialLoadComplete = false;
             databaseDeserialize();
         }
 
@@ -48,7 +49,7 @@ namespace BuildService.Client.WinForms.Authentication
 
             databasePostProcess();
         }
-        internal void DatabaseSerialize()
+        public void DatabaseSerialize()
         {
             DatabaseHelper.Write(DATABASE_FILENAME, sw =>
             {
