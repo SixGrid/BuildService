@@ -19,6 +19,16 @@ namespace BuildService.Client.WinForms.Authentication
         internal int DatabaseVersion;
         internal bool InitialLoadComplete { get; private set; }
 
+        public void Delete(AuthenticationProfile profile)
+        {
+            var newProfiles = new List<AuthenticationProfile>();
+            foreach (AuthenticationProfile p in Profiles)
+                if (p != profile)
+                    newProfiles.Add(p);
+            Profiles = newProfiles;
+            DatabaseSerialize();
+        }
+
         private string DATABASE_FILENAME = Path.Join(
             Directory.GetCurrentDirectory(),
             @"auth.db"
