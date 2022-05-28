@@ -18,6 +18,39 @@ namespace BuildService.Client.WinForms.Network
         public List<ConnectionProfile> Profiles = new List<ConnectionProfile>();
         internal int DatabaseVersion;
         internal bool InitialLoadComplete { get; private set; }
+
+        public void DeleteProfile(ConnectionProfile profile)
+        {
+            bool allow = true;
+            foreach (var connection in ActiveConnections)
+            {
+                if (connection.Profile == profile)
+                    allow = false;
+            }
+
+            if (allow)
+            {
+                var newProfiles = new List<ConnectionProfile>();
+                foreach (var item in Profiles)
+                {
+                    if (item != profile)
+                        newProfiles.Add(item);
+                }
+                Profiles = newProfiles;
+                DatabaseSerialize();
+            }
+        }
+
+        public ConnectionProfile? GetProfileByID(string id)
+        {
+            foreach (var profile in Profiles)
+            {
+                if (profile.ID == id)
+                    return profile;
+            }
+            return null;
+        }
+
         private string DATABASE_FILENAME = Path.Join(
             Directory.GetCurrentDirectory(),
             @"connection.db"
