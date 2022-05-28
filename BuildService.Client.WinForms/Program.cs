@@ -7,8 +7,8 @@ namespace BuildService.Client.WinForms
     {
         public static int VERSION = 1;
 
-        internal static AuthenticationManager AuthenticationMan = new AuthenticationManager();
-        internal static ConnectionManager ConnectionMan = new ConnectionManager();
+        public static AuthenticationManager AuthenticationMan = new AuthenticationManager();
+        public static ConnectionManager ConnectionMan = new ConnectionManager();
 
         [STAThread]
         public static void Main()
