@@ -116,6 +116,7 @@
             this.buttonDiscard.Text = "Discard";
             this.buttonDiscard.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.buttonDiscard.UseVisualStyleBackColor = true;
+            this.buttonDiscard.Click += new System.EventHandler(this.buttonDiscard_Click);
             // 
             // buttonDelete
             // 

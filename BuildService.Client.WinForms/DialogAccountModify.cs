@@ -16,6 +16,12 @@ namespace BuildService.Client.WinForms
         public DialogAccountModify(AuthenticationProfile profile)
         {
             InitializeComponent();
+            SetProfile(profile);
+        }
+        private AuthenticationProfile AuthProfile;
+
+        public void SetProfile(AuthenticationProfile profile)
+        {
             AuthProfile = profile;
 
             textBoxLabel.Text = profile.Label;
@@ -23,7 +29,6 @@ namespace BuildService.Client.WinForms
             textBoxUsername.Text = profile.Username;
             textBoxPassword.Text = profile.Passphrase;
         }
-        private AuthenticationProfile AuthProfile;
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
@@ -34,11 +39,23 @@ namespace BuildService.Client.WinForms
             AuthProfile.rUpdatedAt();
 
             Program.AuthenticationMan.DatabaseSerialize();
+
+            Close();
+            Dispose();
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             Program.AuthenticationMan.Delete(AuthProfile);
+
+            Close();
+            Dispose();
+        }
+
+        private void buttonDiscard_Click(object sender, EventArgs e)
+        {
+            Close();
+            Dispose();
         }
     }
 }
