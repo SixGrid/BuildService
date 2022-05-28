@@ -13,7 +13,7 @@ namespace BuildService.Client.WinForms.Network
         long CreatedAt { get; set; }
         long UpdatedAt { get; set; }
 
-        IPAddress IpAddress { get; set; }
+        string IpAddress { get; set; }
         uint Port { get; set; }
         string Name { get; set; }
         string Description { get; set; }
@@ -23,7 +23,7 @@ namespace BuildService.Client.WinForms.Network
     {
         public long CreatedAt { get; set; }
         public long UpdatedAt { get; set; }
-        private void rUpdatedAt()
+        public void rUpdatedAt()
         {
             UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
@@ -33,13 +33,13 @@ namespace BuildService.Client.WinForms.Network
             ID = GeneralHelper.GenerateToken(32);
             AuthProfileID = @"";
 
-            IpAddress = new IPAddress(new byte[] { 127, 0, 0, 1 });
+            IpAddress = @"localhost";
             Port = 8090;
             Name = $@"Untitled Server ({CreatedAt}:{ID})";
             Description = @"";
         }
 
-        public IPAddress IpAddress { get; set; }
+        public string IpAddress { get; set; }
         public uint Port { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
@@ -48,7 +48,7 @@ namespace BuildService.Client.WinForms.Network
 
         public void ReadFromStream(SerializationReader sr)
         {
-            IpAddress = IPAddress.Parse(sr.ReadString());
+            IpAddress = GeneralHelper.Base64Decode(sr.ReadString());
             Port = sr.ReadUInt32();
             CreatedAt = sr.ReadInt64();
             UpdatedAt = sr.ReadInt64();
@@ -63,8 +63,7 @@ namespace BuildService.Client.WinForms.Network
 
         public void WriteToStream(SerializationWriter sw)
         {
-            rUpdatedAt();
-            sw.Write(IpAddress.ToString());
+            sw.Write(GeneralHelper.Base64Encode(IpAddress));
             sw.Write(Port);
             sw.Write(CreatedAt);
             sw.Write(UpdatedAt);
