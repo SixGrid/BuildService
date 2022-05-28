@@ -30,14 +30,16 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DialogAccountModify));
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxLabel = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
+            this.textBoxPassword = new System.Windows.Forms.TextBox();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonDiscard = new System.Windows.Forms.Button();
+            this.buttonDelete = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -49,12 +51,12 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Label";
             // 
-            // textBox1
+            // textBoxLabel
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 27);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(318, 23);
-            this.textBox1.TabIndex = 1;
+            this.textBoxLabel.Location = new System.Drawing.Point(12, 27);
+            this.textBoxLabel.Name = "textBoxLabel";
+            this.textBoxLabel.Size = new System.Drawing.Size(318, 23);
+            this.textBoxLabel.TabIndex = 1;
             // 
             // label2
             // 
@@ -65,12 +67,12 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Username";
             // 
-            // textBox2
+            // textBoxUsername
             // 
-            this.textBox2.Location = new System.Drawing.Point(12, 83);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(156, 23);
-            this.textBox2.TabIndex = 5;
+            this.textBoxUsername.Location = new System.Drawing.Point(12, 83);
+            this.textBoxUsername.Name = "textBoxUsername";
+            this.textBoxUsername.Size = new System.Drawing.Size(156, 23);
+            this.textBoxUsername.TabIndex = 5;
             // 
             // label3
             // 
@@ -81,64 +83,85 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "Password";
             // 
-            // textBox3
+            // textBoxPassword
             // 
-            this.textBox3.Location = new System.Drawing.Point(174, 83);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.PasswordChar = '*';
-            this.textBox3.Size = new System.Drawing.Size(156, 23);
-            this.textBox3.TabIndex = 7;
-            this.textBox3.UseSystemPasswordChar = true;
+            this.textBoxPassword.Location = new System.Drawing.Point(174, 83);
+            this.textBoxPassword.Name = "textBoxPassword";
+            this.textBoxPassword.PasswordChar = '*';
+            this.textBoxPassword.Size = new System.Drawing.Size(156, 23);
+            this.textBoxPassword.TabIndex = 7;
+            this.textBoxPassword.UseSystemPasswordChar = true;
             // 
-            // button1
+            // buttonSave
             // 
-            this.button1.Image = global::BuildService.Client.WinForms.Properties.Resources.tick;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(12, 123);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "Save";
-            this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonSave.Image = global::BuildService.Client.WinForms.Properties.Resources.tick;
+            this.buttonSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonSave.Location = new System.Drawing.Point(12, 238);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(75, 23);
+            this.buttonSave.TabIndex = 8;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
-            // button2
+            // buttonDiscard
             // 
-            this.button2.Image = global::BuildService.Client.WinForms.Properties.Resources.cross;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(93, 123);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Discard";
-            this.button2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonDiscard.Image = global::BuildService.Client.WinForms.Properties.Resources.cross;
+            this.buttonDiscard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonDiscard.Location = new System.Drawing.Point(93, 238);
+            this.buttonDiscard.Name = "buttonDiscard";
+            this.buttonDiscard.Size = new System.Drawing.Size(75, 23);
+            this.buttonDiscard.TabIndex = 9;
+            this.buttonDiscard.Text = "Discard";
+            this.buttonDiscard.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonDiscard.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // buttonDelete
             // 
-            this.button3.Image = global::BuildService.Client.WinForms.Properties.Resources.bin;
-            this.button3.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button3.Location = new System.Drawing.Point(255, 123);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 10;
-            this.button3.Text = "Delete";
-            this.button3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.button3.UseVisualStyleBackColor = true;
+            this.buttonDelete.Image = global::BuildService.Client.WinForms.Properties.Resources.bin;
+            this.buttonDelete.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonDelete.Location = new System.Drawing.Point(255, 238);
+            this.buttonDelete.Name = "buttonDelete";
+            this.buttonDelete.Size = new System.Drawing.Size(75, 23);
+            this.buttonDelete.TabIndex = 10;
+            this.buttonDelete.Text = "Delete";
+            this.buttonDelete.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.buttonDelete.UseVisualStyleBackColor = true;
+            this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 121);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(67, 15);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Description";
+            // 
+            // textBoxDescription
+            // 
+            this.textBoxDescription.Location = new System.Drawing.Point(12, 139);
+            this.textBoxDescription.Multiline = true;
+            this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.Size = new System.Drawing.Size(318, 92);
+            this.textBoxDescription.TabIndex = 12;
             // 
             // DialogAccountModify
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(342, 158);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.textBox3);
+            this.ClientSize = new System.Drawing.Size(342, 273);
+            this.Controls.Add(this.textBoxDescription);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.buttonDelete);
+            this.Controls.Add(this.buttonDiscard);
+            this.Controls.Add(this.buttonSave);
+            this.Controls.Add(this.textBoxPassword);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.textBoxUsername);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.textBoxLabel);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -158,13 +181,15 @@
         #endregion
 
         private Label label1;
-        private TextBox textBox1;
+        private TextBox textBoxLabel;
         private Label label2;
-        private TextBox textBox2;
+        private TextBox textBoxUsername;
         private Label label3;
-        private TextBox textBox3;
-        private Button button1;
-        private Button button2;
-        private Button button3;
+        private TextBox textBoxPassword;
+        private Button buttonSave;
+        private Button buttonDiscard;
+        private Button buttonDelete;
+        private Label label4;
+        private TextBox textBoxDescription;
     }
 }
