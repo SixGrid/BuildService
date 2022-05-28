@@ -1,4 +1,5 @@
 using BuildService.Client.WinForms.Authentication;
+using BuildService.Client.WinForms.Network;
 
 namespace BuildService.Client.WinForms
 {
@@ -6,7 +7,8 @@ namespace BuildService.Client.WinForms
     {
         public static int VERSION = 1;
 
-        internal static AuthenticationManager AuthManager = new AuthenticationManager();
+        internal static AuthenticationManager AuthenticationMan = new AuthenticationManager();
+        internal static ConnectionManager ConnectionMan = new ConnectionManager();
 
         [STAThread]
         public static void Main()
