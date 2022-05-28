@@ -239,6 +239,7 @@
             // 
             this.toolStripButton_ConnectionConnect.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.toolStripButton_ConnectionConnect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_ConnectionConnect.Enabled = false;
             this.toolStripButton_ConnectionConnect.Image = global::BuildService.Client.WinForms.Properties.Resources.plug__arrow;
             this.toolStripButton_ConnectionConnect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_ConnectionConnect.Name = "toolStripButton_ConnectionConnect";
@@ -303,7 +304,7 @@
             // 
             this.saveToolStripMenuItem.Image = global::BuildService.Client.WinForms.Properties.Resources.disk;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
