@@ -41,6 +41,18 @@ namespace BuildService.Client.WinForms.Network
             Port = 8090;
             Name = $@"Untitled Server ({CreatedAt}:{ID})";
             Description = @"";
+            Secure = false;
+            Path = @"/";
+        }
+
+        public AuthenticationProfile GetAuthProfile()
+        {
+            foreach(var profile in Program.AuthenticationMan.Profiles)
+            {
+                if (profile.ID == AuthProfileID)
+                    return profile;
+            }
+            return null;
         }
 
         public string IpAddress { get; set; }
