@@ -8,6 +8,7 @@ namespace BuildService.Client.WinForms.Network
 {
     internal class ConnectionManager
     {
-        internal List<ServerConnection> Connections = new List<ServerConnection>();
+        internal List<ServerConnection> ActiveConnections = new List<ServerConnection>();
+        internal List<ConnectionProfile> Profiles = new List<ConnectionProfile>();
     }
 }
