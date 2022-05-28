@@ -33,6 +33,8 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.listView_Auth = new System.Windows.Forms.ListView();
+            this.columnHeaderAuthName = new System.Windows.Forms.ColumnHeader();
+            this.columnHeaderAuthUsername = new System.Windows.Forms.ColumnHeader("(none)");
             this.toolStrip_Auth = new System.Windows.Forms.ToolStrip();
             this.toolStripButton_AuthAdd = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_AuthEdit = new System.Windows.Forms.ToolStripButton();
@@ -44,6 +46,8 @@
             this.toolStripButton_ConnectionRemove = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_ConnectionConnect = new System.Windows.Forms.ToolStripButton();
             this.listView_Connections = new System.Windows.Forms.ListView();
+            this.columnHeaderConnectionName = new System.Windows.Forms.ColumnHeader();
+            this.columnHeaderConnectionAddress = new System.Windows.Forms.ColumnHeader();
             this.toolStripContainer1 = new System.Windows.Forms.ToolStripContainer();
             this.toolStripContainer2 = new System.Windows.Forms.ToolStripContainer();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -98,7 +102,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel2);
             this.splitContainer2.Size = new System.Drawing.Size(203, 426);
-            this.splitContainer2.SplitterDistance = 210;
+            this.splitContainer2.SplitterDistance = 208;
             this.splitContainer2.TabIndex = 2;
             // 
             // tableLayoutPanel1
@@ -114,21 +118,33 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(203, 210);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(203, 208);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // listView_Auth
             // 
+            this.listView_Auth.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderAuthName,
+            this.columnHeaderAuthUsername});
             this.listView_Auth.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView_Auth.FullRowSelect = true;
             this.listView_Auth.GridLines = true;
             this.listView_Auth.Location = new System.Drawing.Point(3, 28);
             this.listView_Auth.MultiSelect = false;
             this.listView_Auth.Name = "listView_Auth";
-            this.listView_Auth.Size = new System.Drawing.Size(197, 179);
+            this.listView_Auth.Size = new System.Drawing.Size(197, 177);
             this.listView_Auth.TabIndex = 0;
             this.listView_Auth.UseCompatibleStateImageBehavior = false;
             this.listView_Auth.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderAuthName
+            // 
+            this.columnHeaderAuthName.Text = "Name";
+            // 
+            // columnHeaderAuthUsername
+            // 
+            this.columnHeaderAuthUsername.Text = "Username";
+            this.columnHeaderAuthUsername.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // toolStrip_Auth
             // 
@@ -155,10 +171,12 @@
             this.toolStripButton_AuthAdd.Name = "toolStripButton_AuthAdd";
             this.toolStripButton_AuthAdd.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton_AuthAdd.Text = "toolStripButton_AuthAdd";
+            this.toolStripButton_AuthAdd.Click += new System.EventHandler(this.toolStripButton_AuthAdd_Click);
             // 
             // toolStripButton_AuthEdit
             // 
             this.toolStripButton_AuthEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_AuthEdit.Enabled = false;
             this.toolStripButton_AuthEdit.Image = global::BuildService.Client.WinForms.Properties.Resources.user__pencil;
             this.toolStripButton_AuthEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_AuthEdit.Name = "toolStripButton_AuthEdit";
@@ -168,6 +186,7 @@
             // toolStripButton_AuthRemove
             // 
             this.toolStripButton_AuthRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_AuthRemove.Enabled = false;
             this.toolStripButton_AuthRemove.Image = global::BuildService.Client.WinForms.Properties.Resources.user__minus;
             this.toolStripButton_AuthRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_AuthRemove.Name = "toolStripButton_AuthRemove";
@@ -187,7 +206,7 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(203, 212);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(203, 214);
             this.tableLayoutPanel2.TabIndex = 4;
             // 
             // toolStrip_Connections
@@ -216,24 +235,29 @@
             this.toolStripButton_ConnectionAdd.Name = "toolStripButton_ConnectionAdd";
             this.toolStripButton_ConnectionAdd.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton_ConnectionAdd.Text = "toolStripButton_ConnectionAdd";
+            this.toolStripButton_ConnectionAdd.Click += new System.EventHandler(this.toolStripButton_ConnectionAdd_Click);
             // 
             // toolStripButton_ConnectionEdit
             // 
             this.toolStripButton_ConnectionEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_ConnectionEdit.Enabled = false;
             this.toolStripButton_ConnectionEdit.Image = global::BuildService.Client.WinForms.Properties.Resources.server__pencil;
             this.toolStripButton_ConnectionEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_ConnectionEdit.Name = "toolStripButton_ConnectionEdit";
             this.toolStripButton_ConnectionEdit.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton_ConnectionEdit.Text = "toolStripButton_ConnectionEdit";
+            this.toolStripButton_ConnectionEdit.Click += new System.EventHandler(this.toolStripButton_ConnectionEdit_Click);
             // 
             // toolStripButton_ConnectionRemove
             // 
             this.toolStripButton_ConnectionRemove.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_ConnectionRemove.Enabled = false;
             this.toolStripButton_ConnectionRemove.Image = global::BuildService.Client.WinForms.Properties.Resources.server__minus;
             this.toolStripButton_ConnectionRemove.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton_ConnectionRemove.Name = "toolStripButton_ConnectionRemove";
             this.toolStripButton_ConnectionRemove.Size = new System.Drawing.Size(23, 22);
             this.toolStripButton_ConnectionRemove.Text = "toolStripButton_ConnectionRemove";
+            this.toolStripButton_ConnectionRemove.Click += new System.EventHandler(this.toolStripButton_ConnectionRemove_Click);
             // 
             // toolStripButton_ConnectionConnect
             // 
@@ -248,16 +272,28 @@
             // 
             // listView_Connections
             // 
+            this.listView_Connections.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderConnectionName,
+            this.columnHeaderConnectionAddress});
             this.listView_Connections.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listView_Connections.FullRowSelect = true;
             this.listView_Connections.GridLines = true;
             this.listView_Connections.Location = new System.Drawing.Point(3, 28);
             this.listView_Connections.MultiSelect = false;
             this.listView_Connections.Name = "listView_Connections";
-            this.listView_Connections.Size = new System.Drawing.Size(197, 181);
+            this.listView_Connections.Size = new System.Drawing.Size(197, 183);
             this.listView_Connections.TabIndex = 3;
             this.listView_Connections.UseCompatibleStateImageBehavior = false;
             this.listView_Connections.View = System.Windows.Forms.View.Details;
+            this.listView_Connections.SelectedIndexChanged += new System.EventHandler(this.listView_Connections_SelectedIndexChanged);
+            // 
+            // columnHeaderConnectionName
+            // 
+            this.columnHeaderConnectionName.Text = "Name";
+            // 
+            // columnHeaderConnectionAddress
+            // 
+            this.columnHeaderConnectionAddress.Text = "Address";
             // 
             // toolStripContainer1
             // 
@@ -304,7 +340,7 @@
             // 
             this.saveToolStripMenuItem.Image = global::BuildService.Client.WinForms.Properties.Resources.disk;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
@@ -323,8 +359,9 @@
             this.connectionProfilesToolStripMenuItem});
             this.refreshToolStripMenuItem.Image = global::BuildService.Client.WinForms.Properties.Resources.arrow_circle;
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.refreshToolStripMenuItem.Text = "Refresh";
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // profileListToolStripMenuItem
             // 
@@ -332,6 +369,7 @@
             this.profileListToolStripMenuItem.Name = "profileListToolStripMenuItem";
             this.profileListToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.profileListToolStripMenuItem.Text = "Authentication Profiles";
+            this.profileListToolStripMenuItem.Click += new System.EventHandler(this.profileListToolStripMenuItem_Click);
             // 
             // connectionProfilesToolStripMenuItem
             // 
@@ -339,6 +377,7 @@
             this.connectionProfilesToolStripMenuItem.Name = "connectionProfilesToolStripMenuItem";
             this.connectionProfilesToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
             this.connectionProfilesToolStripMenuItem.Text = "Connection Profiles";
+            this.connectionProfilesToolStripMenuItem.Click += new System.EventHandler(this.connectionProfilesToolStripMenuItem_Click);
             // 
             // MainDashboard
             // 
@@ -401,5 +440,9 @@
         private ToolStripMenuItem refreshToolStripMenuItem;
         private ToolStripMenuItem profileListToolStripMenuItem;
         private ToolStripMenuItem connectionProfilesToolStripMenuItem;
+        private ColumnHeader columnHeaderAuthName;
+        private ColumnHeader columnHeaderAuthUsername;
+        private ColumnHeader columnHeaderConnectionName;
+        private ColumnHeader columnHeaderConnectionAddress;
     }
 }
