@@ -7,12 +7,14 @@ namespace BuildService.Client.WinForms
     {
         public static int VERSION = 1;
 
-        public static AuthenticationManager AuthenticationMan = new AuthenticationManager();
-        public static ConnectionManager ConnectionMan = new ConnectionManager();
+        public static AuthenticationManager AuthenticationMan;
+        public static ConnectionManager ConnectionMan;
 
         [STAThread]
         public static void Main()
         {
+            AuthenticationMan = new AuthenticationManager();
+            ConnectionMan = new ConnectionManager();
             ApplicationConfiguration.Initialize();
             Application.Run(new MainDashboard());
         }
