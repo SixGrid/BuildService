@@ -16,5 +16,11 @@ namespace BuildService.Client.WinForms
             ApplicationConfiguration.Initialize();
             Application.Run(new MainDashboard());
         }
+
+        public static void Save()
+        {
+            AuthenticationMan.DatabaseSerialize();
+            ConnectionMan.DatabaseSerialize();
+        }
     }
 }
