@@ -8,126 +8,66 @@ using BuildServiceCommon.Helpers;
 
 namespace BuildService.Client.WinForms.Authentication
 {
-    public class AuthenticationProfile : bSerializable
+    public interface IAuthenticationProfile
     {
-        public long CreatedAt
+        long CreatedAt { get; set; }
+        long UpdatedAt { get; set; }
+
+        string ID { get; set; }
+        string Username { get; set; }
+        string Passphrase { get; set; }
+        string Label { get; set; }
+        string Description { get; set; }
+    }
+    public class AuthenticationProfile : bSerializable, IAuthenticationProfile
+    {
+        public long CreatedAt { get; set; }
+        public long UpdatedAt { get; set; }
+        private void rUpdatedAt()
         {
-            get;
-            private set;
-        }
-        internal long UpdatedAt
-        {
-            get;
-            private set;
+            UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
         }
 
-        private Dictionary<string, string> data = new Dictionary<string, string>();
-
-        public string Username
-        {
-            get
-            {
-                return data[@"username"];
-            }
-            set
-            {
-                UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                data[@"username"] = value;
-            }
-        }
-        public string Passphrase
-        {
-            get
-            {
-                return data[@"passphrase"];
-            }
-            set
-            {
-                UpdatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-                data[@"passphrase"] = value;
-            }
-        }
+        public string ID { get; set; }
+        public string Username { get; set; }
+        public string Passphrase { get; set; }
+        public string Label { get; set; }
+        public string Description { get; set; }
 
         public AuthenticationProfile()
-            : this(new Dictionary<string, string>()) { }
-
-        internal AuthenticationProfile(Dictionary<string, string> _data)
         {
-            if (!_data.ContainsKey(@"username"))
-                _data.Add(@"username", @"");
-            if (!_data.ContainsKey(@"passphrase"))
-                _data.Add(@"passphrase", @"");
-            if (!_data.ContainsKey(@"createdAt"))
-                _data.Add(@"createdAt", @"0");
-            if (!_data.ContainsKey(@"updatedAt"))
-                _data.Add(@"updatedAt", @"0");
-            if (!_data.ContainsKey(@"label"))
-                _data.Add(@"label", $@"Unnamed Authentication Profile ({DateTimeOffset.UtcNow.ToUnixTimeSeconds()})");
+            CreatedAt = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            UpdatedAt = 0;
 
-            ImportDictionary(_data);
-        }
+            ID = GeneralHelper.GenerateToken(32);
 
-        public static string[] Base64EncodedDictionaryKeys = new string[]
-        {
-            @"username",
-            @"passphrase"
-        };
-        private void ImportDictionary(Dictionary<string, string> _data)
-        {
-            data.Clear();
-            foreach (KeyValuePair<string, string> pair in _data)
-            {
-                data.Add(pair.Key, pair.Value);
-            }
-            foreach (string key in Base64EncodedDictionaryKeys)
-            {
-                if (RegExStatements.Base64.Match(data[key]).Success)
-                {
-                    data[key] = GeneralHelper.Base64Decode(data[key]);
-                }
-            }
-        }
-        internal Dictionary<string, string> ExportContent()
-        {
-            Dictionary<string, string> returnData = new Dictionary<string, string>();
-
-            foreach (KeyValuePair<string, string> pair in data)
-            {
-                for (int i = 0; i < Base64EncodedDictionaryKeys.Length; i++)
-                {
-                    string key = pair.Key;
-                    string value = pair.Value;
-                    if (Base64EncodedDictionaryKeys[i] == pair.Key)
-                    {
-                        value = GeneralHelper.Base64Encode(pair.Value);
-                    }
-                    returnData.Add(key, value);
-                }
-            }
-
-            return returnData;
+            Username = @"";
+            Passphrase = @"";
+            Label = $@"Untitled Authentication Profile ({CreatedAt}:{ID})";
+            Description = @"";
         }
 
         public void ReadFromStream(SerializationReader sr)
         {
-            var dict = new Dictionary<string, string>();
-            dict.Add(@"username", sr.ReadString());
-            dict.Add(@"passphrase", sr.ReadString());
-            dict.Add(@"createdAt", sr.ReadString());
-            dict.Add(@"updatedAt", sr.ReadString());
-            dict.Add(@"label", sr.ReadString());
-
-            ImportDictionary(dict);
+            Username = sr.ReadString();
+            Passphrase = sr.ReadString();
+            CreatedAt = sr.ReadInt64();
+            UpdatedAt = sr.ReadInt64();
+            Label = GeneralHelper.Base64Decode(sr.ReadString());
+            ID = sr.ReadString();
+            Description = GeneralHelper.Base64Decode(sr.ReadString());
         }
 
         public void WriteToStream(SerializationWriter sw)
         {
-            var targetData = ExportContent();
-            sw.Write(targetData[@"username"]);
-            sw.Write(targetData[@"passphrase"]);
-            sw.Write(targetData[@"createdAt"]);
-            sw.Write(targetData[@"updatedAt"]);
-            sw.Write(targetData[@"label"]);
+            rUpdatedAt();
+            sw.Write(Username);
+            sw.Write(Passphrase);
+            sw.Write(CreatedAt);
+            sw.Write(UpdatedAt);
+            sw.Write(GeneralHelper.Base64Encode(Label));
+            sw.Write(ID);
+            sw.Write(GeneralHelper.Base64Encode(Description));
         }
     }
 }
