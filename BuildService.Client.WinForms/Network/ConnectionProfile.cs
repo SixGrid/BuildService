@@ -1,4 +1,5 @@
-﻿using BuildServiceCommon.Helpers;
+﻿using BuildService.Client.WinForms.Authentication;
+using BuildServiceCommon.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,9 @@ namespace BuildService.Client.WinForms.Network
         string Name { get; set; }
         string Description { get; set; }
         string ID { get; set; }
+        string AuthProfileID { get; set; }
+        bool Secure { get; set; }
+        string Path { get; set; }
     }
     public class ConnectionProfile : IConnectionProfile, bSerializable
     {
@@ -45,6 +49,8 @@ namespace BuildService.Client.WinForms.Network
         public string Description { get; set; }
         public string ID { get; set; }
         public string AuthProfileID { get; set; }
+        public bool Secure { get; set; }
+        public string Path { get; set; }
 
         public void ReadFromStream(SerializationReader sr)
         {
@@ -58,7 +64,9 @@ namespace BuildService.Client.WinForms.Network
 
             AuthProfileID = sr.ReadString();
             ID = sr.ReadString();
-            
+
+            Secure = sr.ReadBoolean();
+            Path = GeneralHelper.Base64Decode(sr.ReadString());
         }
 
         public void WriteToStream(SerializationWriter sw)
@@ -73,6 +81,10 @@ namespace BuildService.Client.WinForms.Network
 
             sw.Write(AuthProfileID);
             sw.Write(ID);
+
+            sw.Write(Secure);
+
+            sw.Write(GeneralHelper.Base64Encode(Path));
         }
     }
 }
