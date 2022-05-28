@@ -27,15 +27,27 @@ namespace BuildService.Client.WinForms.Network
             : this(new byte[] { 127, 0, 0, 1 }, 8090) { }
         internal ServerConnection(IPAddress address, uint port)
         {
-            IpAddress = address;
+            IpAddress = address.ToString();
             Port = port;
             State = ServerConnectionState.CLOSED;
+        }
+        internal ServerConnection(ConnectionProfile profile)
+        {
+            IpAddress = profile.IpAddress;
+            Port = profile.Port;
+            State = ServerConnectionState.CLOSED;
+            Secure = profile.Secure;
+            Path = profile.Path;
+            Authentication = profile.GetAuthProfile();
+
+            Profile = profile;
         }
         internal bool Connected { get; private set; }
         internal ServerConnectionState State { get; private set; }
 
+        internal ConnectionProfile Profile { get; private set; }
         internal bool Secure { get; private set; }
-        internal IPAddress IpAddress { get; private set; }
+        internal string IpAddress { get; private set; }
         internal uint Port { get; private set; }
         internal string Path { get; private set; }
 
