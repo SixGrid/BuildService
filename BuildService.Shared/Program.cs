@@ -23,7 +23,7 @@ namespace BuildService.Shared
 
         public static void Main(string[] args)
         {
-            if (args.Length > 0 && args[0] == @"-serer")
+            if (args.Length > 0 && args[0] == @"-server")
             {
                 InitalizeServer();
             }
