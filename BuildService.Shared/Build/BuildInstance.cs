@@ -170,7 +170,7 @@ namespace BuildService.Shared.Build
             ScriptProcess.BeginOutputReadLine();
             ScriptProcess.BeginErrorReadLine();
             
-            ScriptProcess.WaitForExit();
+            ScriptProcess.WaitForExitAsync().Wait();
 
             Status = BuildStatus.Done;
             TargetItem.CurrentBuildStatus = Status;
